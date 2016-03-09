@@ -14,9 +14,7 @@ This is a "WebExtension". See https://developer.mozilla.org/en-US/Add-ons/WebExt
 
 ## Credits
 
-- Authors:
-  - Richard@archive.org
-
-- Credits:
-  - wumpus@archive.org
-  - Blake Winton <bwinton@latte.ca>
+  - Richard Caceres, @rchrd2
+  - Greg Lindahl, @wumpus
+  - Blake Winton, @bwinton, author of https://github.com/bwinton/404archive
+  - Adam Miller, @adam-miller, author of https://github.com/adam-miller/ChromeNoMore404s

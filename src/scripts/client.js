@@ -60,6 +60,7 @@
     var textEl = document.createElement("div");
     textEl.innerHTML = html;
     textEl.style.flex = "1";
+    textEl.style.margin = '0 0 0 8px';
     messageEl.appendChild(textEl);
 
     var closeEl = document.createElement("button");
