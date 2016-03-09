@@ -1,0 +1,84 @@
+.IA_banner {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline;
+      max-width:none;
+}
+
+@media screen,projection {
+  .IA_banner {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    max-width:none;
+  }
+}
+.IA_banner_buffer {
+  height:38px;
+  display:none;
+}
+.IA_banner_wrapper {
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:100%;
+  text-align:left;
+  z-index:2147483647;
+  padding:0px
+}
+.IA_banner_content {
+  position:relative;
+  width:100%;
+  background-color:#ececec;
+  background: linear-gradient(#ececec, #e1e1e1);
+  margin:0px;
+  border-bottom: solid 1px #7A7A7A;
+  padding:10px;
+  font: 15px arial,sans-serif;
+}
+.IA_banner_message {
+  padding-left:35px;
+  color:#000029;
+}
+a.IA_banner_archive_link {
+  color:#61C;
+}
+.IA_banner_header {
+  display:none;
+  position:absolute;
+  top:0px;
+  left:19px;
+  background-color:#000;
+  color:#FFF;
+  height:19px;
+  line-height:19px;
+  padding: 0 4px 0 4px;
+  width:304px;
+  text-align:left;
+  font-size:14px;
+  font-family: arial, sans-serif;
+}
+.IA_banner_logo {
+  position:absolute;
+  top:3px;
+  left:10px;
+}
+.IA_banner_close {
+  position:absolute;
+  top:10px;
+  right:30px;
+  cursor:default;
+}
+.IA_banner_close:hover {
+  cursor:pointer;
+}
+
+.IA_banner_hidden {
+  display:none;
+}
