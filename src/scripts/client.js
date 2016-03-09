@@ -1,6 +1,9 @@
 (function() {
   var enforceBannerInterval;
 
+  /**
+   * borrowed from Adam's ChromeNoMore404s plugin
+   */
   function convertFromTimestamp(timestamp) {
     var year = timestamp.substring(0,4);
     var month = timestamp.substring(4,6);
@@ -84,7 +87,6 @@
       // Some pages use javascript to update the dom so poll to ensure
       // the banner gets recreated if it is deleted.
       enforceBannerInterval = setInterval(function() {
-        console.log('here');
         createBanner(wayback_page_url, wayback_response);
       }, 500);
     }
