@@ -7,6 +7,8 @@ This is a "WebExtension". See https://developer.mozilla.org/en-US/Add-ons/WebExt
 - Click "Load Temporary Add-on"
 - Click "manifest.json"
 
+If something is wrong, it will silently fail. Try removing the add-on, waiting a few seconds, then re-adding.
+
 ## Building
 
 - Run `make build`

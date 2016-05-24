@@ -79,7 +79,6 @@
   };
 
   var checkIt = function() {
-    console.log('in checkIt');
     var wayback_page_url = window.__WAYBACK_PAGE_URL;
     var wayback_response = window.__WAYBACK_RESPONSE;
     console.log(wayback_page_url);

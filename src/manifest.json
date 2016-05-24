@@ -3,7 +3,7 @@
 
   "name": "Internet Archive 404 Helper",
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine",
-  "version": "1.0",
+  "version": "1.1.0",
 
   "icons": {
     "48": "icons/border-48.png"

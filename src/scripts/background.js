@@ -26,7 +26,10 @@ chrome.webRequest.onCompleted.addListener(function(details) {
  */
 function wmAvailabilityCheck(url, onsuccess, onfail, onerror) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://archive.org/wayback/available?url=' + url, true);
+  xhr.open('GET', 'https://archive.org/wayback/available?url=' + url, true);
+  xhr.setRequestHeader('User-Agent', navigator.userAgent + ' FirefoxNoMore404s');
+  xhr.setRequestHeader('IsFirefoxNoMore404s', '1');
+  xhr.setRequestHeader('FirefoxNoMore404sVersion', '1.1.0');
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
       if (xhr.status == 200) {
