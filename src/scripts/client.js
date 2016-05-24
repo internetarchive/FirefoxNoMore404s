@@ -12,7 +12,7 @@
     var min = timestamp.substring(10,12);
     var sec = timestamp.substring(12,14);
     var monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    var dateString=day;// = datetime.getDate();
+    var dateString=day;
     dateString+= " " + monthNames[parseInt(month)-1];
     dateString+= ", " +year;
     dateString+= " " + hour;
@@ -33,7 +33,6 @@
       left: "0",
       width: "100%",
       padding: "1rem",
-      // backgroundColor: "#ccc",
       background: "linear-gradient(rgb(236, 236, 236), rgb(225, 225, 225))",
       borderBottom: "1px solid rgb(122, 122, 122)",
       color: "#333",
@@ -55,16 +54,21 @@
     var wayback_url = response.archived_snapshots.closest.url;
     var timestamp = response.archived_snapshots.closest.timestamp;
     var date = convertFromTimestamp(timestamp);
-    var html = "This page is available via the Wayback Machine - " +
-               "<a style='color:blue' href='"+wayback_url+"'>Visit the site as it was captured on "+date+"</a>";
+
+    var linkEl = document.createElement('a');
+    linkEl.href = wayback_url;
+    linkEl.style.color = 'blue';
+    linkEl.appendChild(document.createTextNode("Visit the site as it was captured on " + date));
+
     var textEl = document.createElement("div");
-    textEl.innerHTML = html;
+    textEl.appendChild(document.createTextNode("This page is available via the Wayback Machine - "));
+    textEl.appendChild(linkEl);
     textEl.style.flex = "1";
     textEl.style.margin = '0 0 0 8px';
     messageEl.appendChild(textEl);
 
     var closeEl = document.createElement("button");
-    closeEl.innerHTML = "Close";
+    closeEl.appendChild(document.createTextNode("Close"));
     closeEl.onclick = function() {
       clearInterval(enforceBannerInterval);
       document.getElementById('no-more-404s-message').style.display = "none";
