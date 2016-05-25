@@ -85,8 +85,9 @@
   var checkIt = function() {
     var wayback_page_url = window.__WAYBACK_PAGE_URL;
     var wayback_response = window.__WAYBACK_RESPONSE;
-    console.log(wayback_page_url);
-    console.log(wayback_response);
+    // console.log(window.__DEBUG_MESSAGE === undefined ? 'debug is undefined' : window.__DEBUG_MESSAGE);
+    // console.log(wayback_page_url);
+    // console.log(wayback_response);
     if (wayback_page_url && wayback_response) {
       // Some pages use javascript to update the dom so poll to ensure
       // the banner gets recreated if it is deleted.

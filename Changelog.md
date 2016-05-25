@@ -1,3 +1,6 @@
+## v1.2.0
+- Disable extension in incognito mode.
+
 ## v1.1.2
 - Change client.js to use DOM methods instead of setting innerHTML for security.
 
