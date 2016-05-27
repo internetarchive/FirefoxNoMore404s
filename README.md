@@ -9,9 +9,16 @@ This is a "WebExtension". See https://developer.mozilla.org/en-US/Add-ons/WebExt
 
 If something is wrong, it will silently fail. Try removing the add-on, waiting a few seconds, then re-adding.
 
+
 ## Building
 
 - Run `make build`
+
+
+## License
+
+Copyright Internet Archive, 2016
+AGPL-3
 
 
 ## Credits
