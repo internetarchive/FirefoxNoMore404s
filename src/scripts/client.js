@@ -1,24 +1,23 @@
 (function() {
   var enforceBannerInterval;
 
-  /**
-   * borrowed from Adam's ChromeNoMore404s plugin
-   */
   function convertFromTimestamp(timestamp) {
-    var year = timestamp.substring(0,4);
-    var month = timestamp.substring(4,6);
-    var day = timestamp.substring(6,8);
-    var hour = timestamp.substring(8,10);
-    var min = timestamp.substring(10,12);
-    var sec = timestamp.substring(12,14);
-    var monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    var dateString=day;
-    dateString+= " " + monthNames[parseInt(month)-1];
-    dateString+= ", " +year;
-    dateString+= " " + hour;
-    dateString+= ":" + min;
-    dateString+= ":" + sec;
-    return dateString;
+    var timestampRE = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/;
+    var matches = matches = timestamp.match(timestampRE);
+    if (!matches) {
+      console.error("Invalid timestamp");
+      return timestamp;
+    }
+    var utcDate = new Date(Date.UTC(
+      matches[1],
+      matches[2] - 1 /* zero indexed */,
+      matches[3],
+      matches[4],
+      matches[5],
+      matches[6]
+    ));
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return utcDate.toLocaleDateString(undefined, options);
   }
 
   var createBanner = function(url, response) {
