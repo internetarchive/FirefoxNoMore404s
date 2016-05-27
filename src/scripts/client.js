@@ -32,7 +32,7 @@
       top: "0",
       left: "0",
       width: "100%",
-      padding: "1rem",
+      padding: "10px",
       background: "linear-gradient(rgb(236, 236, 236), rgb(225, 225, 225))",
       borderBottom: "1px solid rgb(122, 122, 122)",
       color: "#333",
@@ -41,6 +41,7 @@
       alignItems: "center",
       transition: "transform 1.0s linear",
       transform: "translate(0, -100%)",
+      boxSizing: "border-box"
     };
     for(var prop in messageElStyles) {
       messageEl.style[prop] = messageElStyles[prop];
