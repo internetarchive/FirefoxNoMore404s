@@ -16,8 +16,7 @@
       matches[5],
       matches[6]
     ));
-    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return utcDate.toLocaleDateString(undefined, options);
+    return utcDate.toLocaleString();
   }
 
   var createBanner = function(url, response) {
