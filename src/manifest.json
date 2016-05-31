@@ -6,7 +6,7 @@
   "version": "1.2.0",
 
   "icons": {
-    "48": "icons/border-48.png"
+    "48": "images/icon48.png"
   },
 
   "applications": {
