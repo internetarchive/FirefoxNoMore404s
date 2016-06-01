@@ -1,3 +1,5 @@
+/* global chrome */
+
 (function() {
   var enforceBannerInterval;
 
@@ -5,7 +7,7 @@
     var timestampRE = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/;
     var matches = matches = timestamp.match(timestampRE);
     if (!matches) {
-      console.error("Invalid timestamp");
+      console.error("Invalid timestamp"); // eslint-disable-line no-console
       return timestamp;
     }
     var utcDate = new Date(Date.UTC(
@@ -20,7 +22,7 @@
   }
 
   var createBanner = function(url, response) {
-    if (document.getElementById('no-more-404s-message') !== null) {
+    if (document.getElementById("no-more-404s-message") !== null) {
       return;
     }
     var messageEl = document.createElement("div");
@@ -47,37 +49,37 @@
 
     var imageEl = document.createElement("img");
     imageEl.src = chrome.extension.getURL("images/insetIcon.png");
-    imageEl.style.margin = '0 8px 0 0';
+    imageEl.style.margin = "0 8px 0 0";
     messageEl.appendChild(imageEl);
 
     var wayback_url = response.archived_snapshots.closest.url;
     var timestamp = response.archived_snapshots.closest.timestamp;
     var date = convertFromTimestamp(timestamp);
 
-    var linkEl = document.createElement('a');
+    var linkEl = document.createElement("a");
     linkEl.href = wayback_url;
-    linkEl.style.color = 'blue';
+    linkEl.style.color = "blue";
     linkEl.appendChild(document.createTextNode("Visit the site as it was captured on " + date));
 
     var textEl = document.createElement("div");
     textEl.appendChild(document.createTextNode("This page is available via the Wayback Machine - "));
     textEl.appendChild(linkEl);
     textEl.style.flex = "1";
-    textEl.style.margin = '0 0 0 8px';
+    textEl.style.margin = "0 0 0 8px";
     messageEl.appendChild(textEl);
 
     var closeEl = document.createElement("button");
     closeEl.appendChild(document.createTextNode("Close"));
     closeEl.onclick = function() {
       clearInterval(enforceBannerInterval);
-      document.getElementById('no-more-404s-message').style.display = "none";
+      document.getElementById("no-more-404s-message").style.display = "none";
     };
     messageEl.appendChild(closeEl);
     document.body.appendChild(messageEl);
 
     // Transition element in from top of page
     setTimeout(function() {
-      document.getElementById('no-more-404s-message').style.transform = "translate(0, 0%)";
+      document.getElementById("no-more-404s-message").style.transform = "translate(0, 0%)";
     }, 100);
   };
 
