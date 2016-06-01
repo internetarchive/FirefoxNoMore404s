@@ -1,3 +1,6 @@
+## v1.3.1
+- Add missing space between text and link and correct typo.
+
 ## v1.3.0
 - Add ES Lint file and update code style
 - Fix icon image path

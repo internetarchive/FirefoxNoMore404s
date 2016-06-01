@@ -84,11 +84,11 @@
             el.style.flex = "1";
             el.style.margin = "0 0 0 8px";
           },
-          document.createTextNode("Not to worry! This page is available via the Internet Archive Wayback Machine."),
+          document.createTextNode("Not to worry! This page is available via the Internet Archive Wayback Machine. "),
           createEl("a", function(el) {
             el.href = wayback_url;
             el.style.color = "#0996F8";
-            el.appendChild(document.createTextNode("Visit the site as at looked on " + date + "."));
+            el.appendChild(document.createTextNode("Visit the site as it looked on " + date + "."));
           })
         ),
         createEl("button",
