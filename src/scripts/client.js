@@ -5,7 +5,7 @@
 
   function convertFromTimestamp(timestamp) {
     var timestampRE = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/;
-    var matches = matches = timestamp.match(timestampRE);
+    var matches = timestamp.match(timestampRE);
     if (!matches) {
       console.error("Invalid timestamp"); // eslint-disable-line no-console
       return timestamp;
@@ -18,72 +18,124 @@
       matches[5],
       matches[6]
     ));
-    return utcDate.toLocaleString();
+    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return utcDate.toLocaleString('en-us', options);
   }
 
-  var createBanner = function(url, response) {
+  /**
+   * @param {string} type
+   * @param {function) handler(el)
+   * @param remaining args are children
+   */
+  function createEl(type, handler) {
+    var el = document.createElement(type);
+    if (handler !== undefined) {
+      handler(el);
+    }
+    // Append *args to created el
+    for (var i = 2; i < arguments.length; i++) {
+      el.appendChild(arguments[i]);
+    }
+    return el;
+  }
+
+  function createBanner(url, response) {
     if (document.getElementById("no-more-404s-message") !== null) {
       return;
     }
-    var messageEl = document.createElement("div");
-    messageEl.id = "no-more-404s-message";
-    var messageElStyles = {
-      position: "fixed",
-      top: "0",
-      left: "0",
-      width: "100%",
-      padding: "10px",
-      background: "linear-gradient(rgb(236, 236, 236), rgb(225, 225, 225))",
-      borderBottom: "1px solid rgb(122, 122, 122)",
-      color: "#333",
-      font: "15px arial, sans-serif",
-      display: "flex",
-      alignItems: "center",
-      transition: "transform 1.0s linear",
-      transform: "translate(0, -100%)",
-      boxSizing: "border-box"
-    };
-    for(var prop in messageElStyles) {
-      messageEl.style[prop] = messageElStyles[prop];
-    }
-
-    var imageEl = document.createElement("img");
-    imageEl.src = chrome.extension.getURL("images/insetIcon.png");
-    imageEl.style.margin = "0 8px 0 0";
-    messageEl.appendChild(imageEl);
 
     var wayback_url = response.archived_snapshots.closest.url;
     var timestamp = response.archived_snapshots.closest.timestamp;
     var date = convertFromTimestamp(timestamp);
 
-    var linkEl = document.createElement("a");
-    linkEl.href = wayback_url;
-    linkEl.style.color = "blue";
-    linkEl.appendChild(document.createTextNode("Visit the site as it was captured on " + date));
-
-    var textEl = document.createElement("div");
-    textEl.appendChild(document.createTextNode("This page is available via the Wayback Machine - "));
-    textEl.appendChild(linkEl);
-    textEl.style.flex = "1";
-    textEl.style.margin = "0 0 0 8px";
-    messageEl.appendChild(textEl);
-
-    var closeEl = document.createElement("button");
-    closeEl.appendChild(document.createTextNode("Close"));
-    closeEl.onclick = function() {
-      clearInterval(enforceBannerInterval);
-      document.getElementById("no-more-404s-message").style.display = "none";
-    };
-    messageEl.appendChild(closeEl);
-    document.body.appendChild(messageEl);
+    document.body.appendChild(
+      createEl("div",
+        function(el) {
+          el.id = "no-more-404s-message";
+          var messageElStyles = {
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            minHeight: "50px",
+            boxSizing: "border-box",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "5px 14px 5px 12px",
+            background: "linear-gradient(#FBFBFB, #E6E6E6)",
+            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.20), 0px 1px 0px 0px #727272",
+            color: "#333",
+            font: "15px arial, sans-serif",
+            transition: "transform 500ms ease-out",
+            transform: "translate(0, -100%)"
+          };
+          for (var prop in messageElStyles) {
+            el.style[prop] = messageElStyles[prop];
+          }
+        },
+        createEl("img", function(el) {
+          // TODO change to svg
+          el.src = chrome.extension.getURL("images/insetIcon.png");
+          el.style.margin = "0 8px 0 0";
+        }),
+        createEl("div",
+          function(el) {
+            el.style.flex = "1";
+            el.style.margin = "0 0 0 8px";
+          },
+          document.createTextNode("Not to worry! This page is available via the Internet Archive Wayback Machine."),
+          createEl("a", function(el) {
+            el.href = wayback_url;
+            el.style.color = "#0996F8";
+            el.appendChild(document.createTextNode("Visit the site as at looked on " + date + "."));
+          })
+        ),
+        createEl("button",
+          function(el) {
+            el.style.width = "20px";
+            el.style.height = "20px";
+            el.style.borderRadius = "3px";
+            el.style.paddingTop = "3px";
+            el.onclick = function() {
+              clearInterval(enforceBannerInterval);
+              document.getElementById("no-more-404s-message").style.display = "none";
+            };
+            el.onmouseenter = function() {
+              el.style.backgroundColor = "#E6E6E6";
+              el.style.boxShadow = "0 1px 0 0 rgba(0,0,0,.1) inset";
+            };
+            el.onmousedown = function() {
+              el.style.backgroundColor = "#CACACA";
+              el.style.boxShadow = "0 1px 0 0 rgba(0,0,0,.15) inset";
+            };
+            el.onmouseup = function() {
+              el.style.backgroundColor = "#E6E6E6";
+              el.style.boxShadow = "0 1px 0 0 rgba(0,0,0,.1) inset";
+            };
+            el.onmouseleave = function() {
+              el.style.backgroundColor = "";
+              el.style.boxShadow = "";
+            };
+          },
+          createEl("img", function(el) {
+            el.src = chrome.extension.getURL("images/close.svg");
+            el.style.borderRadius = "3px";
+            el.style.height = "14px";
+            el.style.width = "14px";
+            el.style.transition = "color 100ms";
+          })
+        )
+      )
+    );
 
     // Transition element in from top of page
     setTimeout(function() {
       document.getElementById("no-more-404s-message").style.transform = "translate(0, 0%)";
     }, 100);
-  };
+  }
 
-  var checkIt = function() {
+  function checkIt() {
     var wayback_page_url = window.__WAYBACK_PAGE_URL;
     var wayback_response = window.__WAYBACK_RESPONSE;
     // console.log(window.__DEBUG_MESSAGE === undefined ? 'debug is undefined' : window.__DEBUG_MESSAGE);
@@ -96,7 +148,7 @@
         createBanner(wayback_page_url, wayback_response);
       }, 500);
     }
-  };
+  }
 
   checkIt();
 })();

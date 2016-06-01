@@ -1,3 +1,8 @@
+## v1.3.0
+- Add ES Lint file and update code style
+- Fix icon image path
+- Update styles based on suggestions by @johngruen
+
 ## v1.2.0
 - Disable extension in incognito mode.
 
