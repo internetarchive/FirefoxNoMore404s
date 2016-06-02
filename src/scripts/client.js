@@ -66,7 +66,7 @@
             background: "linear-gradient(#FBFBFB, #E6E6E6)",
             boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.20), 0px 1px 0px 0px #727272",
             color: "#333",
-            font: "15px arial, sans-serif",
+            font: "14px message-box",
             transition: "transform 500ms ease-out",
             transform: "translate(0, -100%)"
           };
@@ -75,9 +75,10 @@
           }
         },
         createEl("img", function(el) {
-          // TODO change to svg
-          el.src = chrome.extension.getURL("images/insetIcon.png");
-          el.style.margin = "0 8px 0 0";
+          el.src = chrome.extension.getURL("images/insetIcon.svg");
+          el.style.margin = "0 2px 0 0";
+          el.width = "30";
+          el.height = "30";
         }),
         createEl("div",
           function(el) {
@@ -96,7 +97,9 @@
             el.style.width = "20px";
             el.style.height = "20px";
             el.style.borderRadius = "3px";
-            el.style.paddingTop = "3px";
+            el.style.boxSizing = "border-box";
+            el.style.padding = "3px 0 0 0";
+            el.style.border = "none";
             el.onclick = function() {
               clearInterval(enforceBannerInterval);
               document.getElementById("no-more-404s-message").style.display = "none";

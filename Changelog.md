@@ -1,3 +1,8 @@
+## v1.3.2
+- Use SVG icon
+- Add border-box to button element. Fixes rendering issue on some pages.
+- Change font to "14px message-box"
+
 ## v1.3.1
 - Add missing space between text and link and correct typo.
 
