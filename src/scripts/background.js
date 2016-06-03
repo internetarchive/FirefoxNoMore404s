@@ -39,7 +39,8 @@ function wmAvailabilityCheck(url, onsuccess, onfail, onerror) {
   var xhr = new XMLHttpRequest();
   var requestUrl = "https://archive.org/wayback/available?url=" + url;
   xhr.open("GET", requestUrl, true);
-  xhr.setRequestHeader("User-Agent", navigator.userAgent + " FirefoxNoMore404s/1.2.0");
+  xhr.setRequestHeader("User-Agent", navigator.userAgent + " FirefoxNoMore404s/1.4.0");
+  xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {

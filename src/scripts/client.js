@@ -64,9 +64,9 @@
             justifyContent: "space-between",
             padding: "5px 14px 5px 12px",
             background: "linear-gradient(#FBFBFB, #E6E6E6)",
-            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.20), 0px 1px 0px 0px #727272",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.3);",
             color: "#333",
-            font: "14px message-box",
+            font: "14px message-box, sans-serif",
             transition: "transform 500ms ease-out",
             transform: "translate(0, -100%)"
           };
@@ -89,6 +89,7 @@
           createEl("a", function(el) {
             el.href = wayback_url;
             el.style.color = "#0996F8";
+            el.style.textDecoration = "none";
             el.appendChild(document.createTextNode("Visit the site as it looked on " + date + "."));
           })
         ),
