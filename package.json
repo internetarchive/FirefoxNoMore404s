@@ -1,0 +1,28 @@
+{
+  "name": "FirefoxNoMore404s",
+  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine",
+  "version": "1.4.0",
+  "author": "Internet Archive",
+  "bugs": {
+    "url": "https://github.com/internetarchive/FirefoxNoMore404s/issues"
+  },
+  "devDependencies": {
+    "addons-linter": "0.11.0",
+    "eslint": "2.11.1"
+  },
+  "homepage": "https://github.com/internetarchive/FirefoxNoMore404s#readme",
+  "keywords": [],
+  "license": "AGPL-3",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/internetarchive/FirefoxNoMore404s.git"
+  },
+  "scripts": {
+    "build": "make build",
+    "lint": "eslint .",
+    "prebuild": "npm run lint",
+    "pretest": "npm run build",
+    "test": "addons-linter build/FirefoxNoMore404s.xpi -o text"
+  }
+}
