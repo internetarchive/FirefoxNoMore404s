@@ -41,7 +41,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail, onerror) {
   var requestParams = "url=" + encodeURI(url);
   xhr.open("POST", requestUrl, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("User-Agent", navigator.userAgent + " WaybackMachine_Firefox/1.4.1");
+  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/1.4.1");
   xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4) {
