@@ -1,3 +1,11 @@
+## v1.4.1
+- Add another header to api call
+- Rename the built xpi file
+
+## v1.4.0
+- Add special header for endpoint.
+- Rename to Wayback Machine.
+
 ## v1.3.2
 - Use SVG icon
 - Add border-box to button element. Fixes rendering issue on some pages.

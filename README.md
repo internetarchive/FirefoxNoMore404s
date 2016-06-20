@@ -15,6 +15,14 @@ If something is wrong, it will silently fail. Try removing the add-on, waiting a
 - Run `make build`
 
 
+## Places to update the version
+
+- Changelog.md - update change log
+- src/manifest.json - update version
+- src/scripts/background.js - update header
+- Makefile - update version
+
+
 ## License
 
 Copyright Internet Archive, 2016

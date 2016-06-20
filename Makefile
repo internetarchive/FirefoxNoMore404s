@@ -1,5 +1,7 @@
+BUILD_VERSION="1.4.1"
+
 .PHONY: build
 build:
-	-rm ./build/FirefoxNoMore404s.xpi
-	cd src &&	zip -r FirefoxNoMore404s.xpi ./*
-	mv src/FirefoxNoMore404s.xpi ./build/FirefoxNoMore404s.xpi
+	-rm ./build/*.xpi
+	cd src &&	zip -r WaybackMachine_Firefox_V$(BUILD_VERSION).xpi ./*
+	mv src/WaybackMachine_Firefox_V$(BUILD_VERSION).xpi ./build/WaybackMachine_Firefox_V$(BUILD_VERSION).xpi

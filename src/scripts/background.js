@@ -37,9 +37,11 @@ chrome.webRequest.onCompleted.addListener(function(details) {
  */
 function wmAvailabilityCheck(url, onsuccess, onfail, onerror) {
   var xhr = new XMLHttpRequest();
-  var requestUrl = "https://archive.org/wayback/available?url=" + url;
-  xhr.open("GET", requestUrl, true);
-  xhr.setRequestHeader("User-Agent", navigator.userAgent + " FirefoxNoMore404s/1.4.0");
+  var requestUrl = "https://archive.org/wayback/available";
+  var requestParams = "url=" + encodeURI(url);
+  xhr.open("POST", requestUrl, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("User-Agent", navigator.userAgent + " WaybackMachine_Firefox/1.4.1");
   xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4) {
@@ -62,5 +64,5 @@ function wmAvailabilityCheck(url, onsuccess, onfail, onerror) {
       }
     }
   };
-  xhr.send();
+  xhr.send(requestParams);
 }
