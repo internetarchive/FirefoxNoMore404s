@@ -32,36 +32,28 @@ chrome.webRequest.onCompleted.addListener(function(details) {
   });
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
-/**
- * borrowed from Adam's ChromeNoMore404s plugin
- */
-function wmAvailabilityCheck(url, onsuccess, onfail, onerror) {
+
+function wmAvailabilityCheck(url, onsuccess, onfail) {
   var xhr = new XMLHttpRequest();
   var requestUrl = "https://archive.org/wayback/available";
   var requestParams = "url=" + encodeURI(url);
   xhr.open("POST", requestUrl, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/1.4.1");
+  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/1.4.2");
   xhr.setRequestHeader("Wayback-Api-Version", 2);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        var response = JSON.parse(xhr.responseText);
-        if (response.archived_snapshots &&
-            response.archived_snapshots.closest &&
-            response.archived_snapshots.closest.available &&
-            response.archived_snapshots.closest.available === true &&
-            response.archived_snapshots.closest.status.indexOf("2") === 0) {
-          onsuccess(response, url);
-        } else if (onfail && response.archived_snapshots &&
-            !response.archived_snapshots.hasOwnProperty("closest")) {
-          onfail(response, url);
-        }
-      } else {
-        // if (onerror) {
-        //   onerror(response, url);
-        // }
-      }
+  xhr.onload = function() {
+    var response = JSON.parse(xhr.responseText);
+    if (response.results &&
+        response.results[0] &&
+        response.results[0].archived_snapshots &&
+        response.results[0].archived_snapshots.closest &&
+        response.results[0].archived_snapshots.closest.available &&
+        response.results[0].archived_snapshots.closest.available === true &&
+        response.results[0].archived_snapshots.closest.status.indexOf("2") === 0) {
+      onsuccess(response.results[0], url);
+    } else if (onfail && response.archived_snapshots &&
+        !response.archived_snapshots.hasOwnProperty("closest")) {
+      onfail(response.results[0], url);
     }
   };
   xhr.send(requestParams);

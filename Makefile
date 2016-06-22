@@ -1,4 +1,4 @@
-BUILD_VERSION="1.4.1"
+BUILD_VERSION="1.4.2"
 
 .PHONY: build
 build:

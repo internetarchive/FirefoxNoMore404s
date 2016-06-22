@@ -9,6 +9,18 @@ This is a "WebExtension". See https://developer.mozilla.org/en-US/Add-ons/WebExt
 
 If something is wrong, it will silently fail. Try removing the add-on, waiting a few seconds, then re-adding.
 
+More info:
+https://developer.mozilla.org/en-US/docs/Tools/about%3Adebugging#Enabling_add-on_debugging
+
+Also:
+```
+open new tab
+type "about:config"
+enter " xpinstall.signatures.required" in search bar.
+modify value to "false" (just click on it).
+restart firefox and try install extension again.
+```
+
 
 ## Building
 

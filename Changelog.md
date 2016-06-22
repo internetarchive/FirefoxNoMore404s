@@ -1,3 +1,6 @@
+## v1.4.2
+- Update the API call to use POST
+
 ## v1.4.1
 - Add another header to api call
 - Rename the built xpi file
