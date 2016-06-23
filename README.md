@@ -24,6 +24,9 @@ restart firefox and try install extension again.
 
 ## Building
 
+First run:
+
+- Run `npm install -g web-ext@1.0.1`
 - Run `make build`
 
 
