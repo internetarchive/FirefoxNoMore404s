@@ -18,8 +18,8 @@
       matches[5],
       matches[6]
     ));
-    var options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return utcDate.toLocaleString('en-us', options);
+    var options = { year: "numeric", month: "long", day: "numeric" };
+    return utcDate.toLocaleString("en-us", options);
   }
 
   /**
