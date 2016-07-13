@@ -1,3 +1,6 @@
+## v1.4.4
+- Sign the extension
+
 ## v1.4.3
 - Remove background:true from manifest which broke plugin in new FF version.
 

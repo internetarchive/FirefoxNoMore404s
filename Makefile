@@ -1,21 +1,23 @@
-BUILD_VERSION="1.4.3"
-
 # CREDENTIALS should have the following variables set:
 # JWT_ISSUER="x"
 # JWT_SECRET="x"
 include CREDENTIALS
 
+# Use "run" for local development
+.PHONY: run
+run:
+	web-ext run -s=src --pre-install
 
-.PHONY: build_only
-build_only:
-	-rm ./build/*.xpi
-	web-ext build --source-dir=src --artifacts-dir=build
-	mv build/wayback_machine-$(BUILD_VERSION).xpi build/Wayback_Machine_Firefox_V$(BUILD_VERSION).xpi
-	git add *.xpi
+# Only use this if you need to produce an unsigned xpi. Use "run" for development
+.PHONY: build_unsigned
+build_unsigned:
+	-mkdir build_unsigned
+	-rm ./build_unsigned/*unsigned.xpi
+	web-ext build --source-dir=src --artifacts-dir=build_unsigned
 
+# Note sign uploads to FF and downloads the signed plugin
 .PHONY: sign
 sign:
-	web-ext sign -s=src -a=build --api-key=$(JWT_ISSUER) --api-secret=$(JWT_SECRET)
-
-.PHONY: build
-build: build_only sign
+	-rm ./build/*.xpi
+	web-ext sign --verbose -s=src -a=build --api-key=$(JWT_ISSUER) --api-secret=$(JWT_SECRET)
+	git add *.xpi

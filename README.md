@@ -25,9 +25,22 @@ restart firefox and try install extension again.
 ## Building
 
 First run:
-
 - Run `npm install -g web-ext@1.0.1`
-- Run `make build`
+
+```
+make run
+```
+
+## Publishing & Signing
+
+The "web-ext" has a command that publishes and signs the extension at the same time. As far as I can tell, there is no way to do these separately. Once a version is published, it cannot be undone, so use with caution.
+
+First update the version (see Places to Update the version).
+
+```
+# This will sign, publish, and update the ./build directory
+make sign
+```
 
 
 ## Places to update the version
@@ -35,7 +48,6 @@ First run:
 - Changelog.md - update change log
 - src/manifest.json - update version
 - src/scripts/background.js - update header
-- Makefile - update version
 
 
 ## License
