@@ -8,14 +8,14 @@ include CREDENTIALS
 
 .PHONY: build_only
 build_only:
-	-rm ./build/*.xpi
-	web-ext build --source-dir=src --artifacts-dir=build
-	mv build/wayback_machine-$(BUILD_VERSION).xpi build/Wayback_Machine_Firefox_V$(BUILD_VERSION).xpi
-	git add *.xpi
+	-rm ./build/*.zip
+	npm run build_only
+	mv build/wayback_machine-$(BUILD_VERSION).zip build/Wayback_Machine_Firefox_V$(BUILD_VERSION).zip
+	git add build/*.zip
 
 .PHONY: sign
 sign:
-	web-ext sign -s=src -a=build --api-key=$(JWT_ISSUER) --api-secret=$(JWT_SECRET)
+	npm run sign -- --api-key=$(JWT_ISSUER) --api-secret=$(JWT_SECRET)
 
 .PHONY: build
 build: build_only sign

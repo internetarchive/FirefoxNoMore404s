@@ -1,0 +1,27 @@
+{
+  "name": "FirefoxNoMore404s",
+  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
+  "version": "1.4.3",
+  "author": "Internet Archive (https://archive.org/)",
+  "bugs": {
+    "url": "https://github.com/internetarchive/FirefoxNoMore404s/issues"
+  },
+  "devDependencies": {
+    "eslint": "3.1.1",
+    "web-ext": "1.3.0"
+  },
+  "homepage": "https://archive.org/",
+  "keywords": [],
+  "license": "AGPL-3",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/internetarchive/FirefoxNoMore404s.git"
+  },
+  "scripts": {
+    "build_only": "web-ext build --source-dir=src --artifacts-dir=build",
+    "lint": "eslint .",
+    "sign": "web-ext sign -s=src -a=build",
+    "test": "npm run lint"
+  }
+}
