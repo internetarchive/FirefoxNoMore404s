@@ -1,6 +1,14 @@
 ## Developing
 
-This is a "WebExtension". See https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Your_first_WebExtension
+This is a "WebExtension". See https://developer.mozilla.org/Add-ons/WebExtensions/Your_first_WebExtension
+
+Develop through the web-ext run command.
+```
+npm run dev
+```
+
+
+## How to load a zip or xpi file directly into Firefox
 
 - Upgrade to Firefox 45 or newer
 - Visit `about:debugging`
@@ -10,26 +18,16 @@ This is a "WebExtension". See https://developer.mozilla.org/en-US/Add-ons/WebExt
 If something is wrong, it will silently fail. Try removing the add-on, waiting a few seconds, then re-adding.
 
 More info:
-https://developer.mozilla.org/en-US/docs/Tools/about%3Adebugging#Enabling_add-on_debugging
+https://developer.mozilla.org/docs/Tools/about%3Adebugging#Enabling_add-on_debugging
 
 Also:
-```
-open new tab
-type "about:config"
-enter " xpinstall.signatures.required" in search bar.
-modify value to "false" (just click on it).
-restart firefox and try install extension again.
-```
 
+1. Open new tab.
+2. Type "about:config".
+3. Enter "xpinstall.signatures.required" in search bar.
+4. Modify value to "false" (just click on it).
+5. Restart Firefox and try install extension again.
 
-## Building
-
-First run:
-- Run `npm install -g web-ext@1.0.1`
-
-```
-make run
-```
 
 ## Publishing & Signing
 
@@ -39,9 +37,16 @@ First update the version (see Places to Update the version).
 
 ```
 # This will sign, publish, and update the ./build directory
+npm install
 make sign
 ```
 
+## Building an unsigned extension
+
+Only use this if you need to produce an unsigned xpi. Use "run" for development
+```
+npm run build_unsigned
+```
 
 ## Places to update the version
 
