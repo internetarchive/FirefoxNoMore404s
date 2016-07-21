@@ -38,7 +38,7 @@ First update the version (see Places to Update the version).
 ```
 # This will sign, publish, and update the ./build directory
 npm install
-make sign
+npm run sign
 ```
 
 ## Building an unsigned extension
@@ -53,7 +53,7 @@ npm run build_unsigned
 - Changelog.md - update change log
 - src/manifest.json - update version
 - src/scripts/background.js - update header
-
+- package.json - update header
 
 ## License
 

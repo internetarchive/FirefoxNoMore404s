@@ -1,3 +1,8 @@
+## v1.4.5
+- Update the build tooling to use NPM package.json (@pdehaan)
+- Update the icons (@johngruen)
+- Autofocus the link in the dropdown for accessibility 
+
 ## v1.4.4
 - Sign the extension
 

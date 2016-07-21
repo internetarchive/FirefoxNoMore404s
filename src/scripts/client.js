@@ -86,6 +86,7 @@
           },
           document.createTextNode("Not to worry! This page is available via the Internet Archive Wayback Machine. "),
           createEl("a", function(el) {
+            el.id = "no-more-404s-message-link";
             el.href = wayback_url;
             el.style.color = "#0996F8";
             el.style.textDecoration = "none";
@@ -123,6 +124,7 @@
           },
           createEl("img", function(el) {
             el.src = chrome.extension.getURL("images/close.svg");
+            el.alt = "close";
             el.style.borderRadius = "3px";
             el.style.height = "14px";
             el.style.width = "14px";
@@ -131,6 +133,8 @@
         )
       )
     );
+    // Focus the link for accessibility
+    document.getElementById("no-more-404s-message-link").focus();
 
     // Transition element in from top of page
     setTimeout(function() {
