@@ -1,5 +1,3 @@
-/* global chrome */
-
 /**
  * Header callback
  */

@@ -1,5 +1,3 @@
-/* global chrome */
-
 (function() {
   var enforceBannerInterval;
 
@@ -18,14 +16,15 @@
       matches[5],
       matches[6]
     ));
-    var options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return utcDate.toLocaleString('en-us', options);
+    var options = { year: "numeric", month: "long", day: "numeric" };
+    return utcDate.toLocaleString("en-us", options);
   }
 
   /**
    * @param {string} type
-   * @param {function) handler(el)
+   * @param {function} handler(el)
    * @param remaining args are children
+   * @returns {object} DOM element
    */
   function createEl(type, handler) {
     var el = document.createElement(type);

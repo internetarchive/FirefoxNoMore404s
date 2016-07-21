@@ -1,2 +1,4 @@
 CREDENTIALS
 build_unsigned
+node_modules
+*.log

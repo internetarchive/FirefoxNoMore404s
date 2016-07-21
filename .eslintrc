@@ -2,6 +2,12 @@ extends: eslint:recommended
 
 env:
   browser: true
+  node: true
+
+globals:
+  chrome: false
+
+root: true
 
 rules:
   eqeqeq: 1
