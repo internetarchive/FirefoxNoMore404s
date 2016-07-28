@@ -1,3 +1,5 @@
+var VERSION = "1.4.6";
+
 /**
  * Header callback
  */
@@ -37,7 +39,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   var requestParams = "url=" + encodeURI(url);
   xhr.open("POST", requestUrl, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/1.4.6");
+  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/" + VERSION);
   xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onload = function() {
     var response = JSON.parse(xhr.responseText);
@@ -56,3 +58,49 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   };
   xhr.send(requestParams);
 }
+
+
+/**
+ * Helper generaters a telemetry function. Each action can only be sent once.
+ * @param action {string}
+ * @return {function}
+ */
+function telemetryGenerator(action) {
+  var TESTPILOT_TELEMETRY_CHANNEL = "testpilot-telemetry";
+  var testpilotPingChannel = new BroadcastChannel(TESTPILOT_TELEMETRY_CHANNEL);
+  var actionAlreadySent = false;
+  return function() {
+    if (actionAlreadySent === false) {
+      testpilotPingChannel.postMessage({
+        "test": "No More 404s",
+        "version": VERSION,
+        "agent": navigator.userAgent,
+        "payload": {
+          "action": action,
+        }
+      });
+    } else {
+      actionAlreadySent = true;
+    }
+  }
+}
+
+var telemetry = {
+  // 'viewed': the user clicked through to the archived version
+  viewed: telemetryGenerator("viewed"),
+  // 'dismissed': the user dismissed the prompt
+  dismissed: telemetryGenerator("dismissed"),
+  // 'ignored': the user ignored the prompt
+  ignored: telemetryGenerator("ignored"),
+  // 'none': will be 'none' if there isn't an archive available
+  none: telemetryGenerator("none"),
+};
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action in telemetry) {
+    telemetry[request.action]();
+    sendResponse(true);
+  } else {
+    sendResponse(false);
+  }
+});
