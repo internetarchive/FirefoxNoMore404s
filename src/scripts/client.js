@@ -21,6 +21,28 @@
   }
 
   /**
+   * Brute force inline css style reset
+   */
+  function resetStyesInline(el) {
+    el.style.margin = 0;
+    el.style.padding = 0;
+    el.style.border = 0;
+    el.style.fontSize = "100%";
+    el.style.font = "inherit";
+    el.style.verticalAlign = "baseline";
+    el.style.lineHeight = "1";
+    el.style.boxSizing = "content-box";
+    el.style.overflow = "auto";
+    el.style.fontWeight = "inherit";
+    el.style.height = "auto";
+    el.style.position = "relative";
+    el.style.width = "auto";
+    el.style.display = "inline";
+    el.style.backgroundColor = "transparent";
+    el.style.color = "#333";
+  }
+
+  /**
    * @param {string} type
    * @param {function} handler(el)
    * @param remaining args are children
@@ -28,6 +50,7 @@
    */
   function createEl(type, handler) {
     var el = document.createElement(type);
+    resetStyesInline(el);
     if (handler !== undefined) {
       handler(el);
     }
@@ -51,31 +74,29 @@
       createEl("div",
         function(el) {
           el.id = "no-more-404s-message";
-          var messageElStyles = {
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            minHeight: "50px",
-            boxSizing: "border-box",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "5px 14px 5px 12px",
-            background: "linear-gradient(#FBFBFB, #E6E6E6)",
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.3);",
-            color: "#333",
-            font: "14px message-box, sans-serif",
-            transition: "transform 500ms ease-out",
-            transform: "translate(0, -100%)"
-          };
-          for (var prop in messageElStyles) {
-            el.style[prop] = messageElStyles[prop];
-          }
+          el.style.position = "fixed";
+          el.style.top = "0";
+          el.style.left = "0";
+          el.style.width = "100%";
+          el.style.minHeight = "50px";
+          el.style.boxSizing = "border-box";
+          el.style.display = "flex";
+          el.style.alignItems = "center";
+          el.style.justifyContent = "space-between";
+          el.style.padding = "5px 14px 5px 12px";
+          el.style.background = "linear-gradient(#FBFBFB, #E6E6E6)";
+          el.style.boxShadow =  "0 0 10px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.3);";
+          el.style.color =  "#333";
+          el.style.font =  "14px message-box, sans-serif";
+          el.style.transition =  "transform 500ms ease-out";
+          el.style.transform =  "translate(0, -100%)";
+          el.style.zIndex =  "999999999";
         },
         createEl("img", function(el) {
           el.src = chrome.extension.getURL("images/insetIcon.svg");
           el.style.margin = "0 2px 0 0";
+          el.style.width = "30px";
+          el.style.height = "30px";
           el.width = "30";
           el.height = "30";
         }),
@@ -118,7 +139,7 @@
               el.style.boxShadow = "0 1px 0 0 rgba(0,0,0,.1) inset";
             };
             el.onmouseleave = function() {
-              el.style.backgroundColor = "";
+              el.style.backgroundColor = "transparent";
               el.style.boxShadow = "";
             };
           },
