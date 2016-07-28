@@ -1,5 +1,8 @@
 (function() {
   var enforceBannerInterval;
+  var archiveLinkWasClicked = false;
+  var bannerWasShown = false;
+  var bannerWasClosed = false;
 
   function convertFromTimestamp(timestamp) {
     var timestampRE = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/;
@@ -43,6 +46,15 @@
   }
 
   /**
+   * Communicates with background.js
+   * @param action {string}
+   * @param complete {function}
+   */
+  function sendTelemetry(action, complete) {
+    chrome.runtime.sendMessage({action: action}, complete);
+  }
+
+  /**
    * @param {string} type
    * @param {function} handler(el)
    * @param remaining args are children
@@ -65,7 +77,6 @@
     if (document.getElementById("no-more-404s-message") !== null) {
       return;
     }
-
     var wayback_url = response.archived_snapshots.closest.url;
     var timestamp = response.archived_snapshots.closest.timestamp;
     var date = convertFromTimestamp(timestamp);
@@ -112,6 +123,10 @@
             el.style.color = "#0996F8";
             el.style.textDecoration = "none";
             el.appendChild(document.createTextNode("View a saved version courtesy of the Wayback Machine."));
+            el.onclick = function(e) {
+              archiveLinkWasClicked = true;
+              sendTelemetry("viewed");
+            };
           })
         ),
         createEl("button",
@@ -125,6 +140,8 @@
             el.onclick = function() {
               clearInterval(enforceBannerInterval);
               document.getElementById("no-more-404s-message").style.display = "none";
+              bannerWasClosed = true;
+              sendTelemetry("dismissed");
             };
             el.onmouseenter = function() {
               el.style.backgroundColor = "#E6E6E6";
@@ -161,20 +178,28 @@
     setTimeout(function() {
       document.getElementById("no-more-404s-message").style.transform = "translate(0, 0%)";
     }, 100);
+
+    bannerWasShown = true;
   }
 
   function checkIt() {
     var wayback_page_url = window.__WAYBACK_PAGE_URL;
     var wayback_response = window.__WAYBACK_RESPONSE;
-    // console.log(window.__DEBUG_MESSAGE === undefined ? 'debug is undefined' : window.__DEBUG_MESSAGE);
-    // console.log(wayback_page_url);
-    // console.log(wayback_response);
     if (wayback_page_url && wayback_response) {
       // Some pages use javascript to update the dom so poll to ensure
       // the banner gets recreated if it is deleted.
       enforceBannerInterval = setInterval(function() {
         createBanner(wayback_page_url, wayback_response);
       }, 500);
+
+      // Bind leave page for telemetry
+      window.onunload = function() {
+        if (bannerWasShown && !bannerWasClosed && !archiveLinkWasClicked) {
+          sendTelemetry("ignored");
+        }
+      };
+    } else {
+      sendTelemetry("none");
     }
   }
 
