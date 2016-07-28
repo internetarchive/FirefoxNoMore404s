@@ -1,3 +1,7 @@
+## v1.5.0
+- Add more resilient CSS
+- Add test pilot telemetry
+
 ## v1.4.6
 - Change the text in the banner.
 
