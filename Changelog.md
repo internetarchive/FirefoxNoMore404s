@@ -1,3 +1,6 @@
+## v1.5.1
+- Add external update URL
+
 ## v1.5.0
 - Add more resilient CSS
 - Add test pilot telemetry
