@@ -1,3 +1,8 @@
+## v1.5.3
+- Fix issue with 404 pages on Myspace.com
+- Remove some unused code.
+- Move `version` into Telemetry payload
+
 ## v1.5.2
 - Version bump to test automatic updating
 

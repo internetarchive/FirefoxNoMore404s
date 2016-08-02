@@ -4,25 +4,6 @@
   var bannerWasShown = false;
   var bannerWasClosed = false;
 
-  function convertFromTimestamp(timestamp) {
-    var timestampRE = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/;
-    var matches = timestamp.match(timestampRE);
-    if (!matches) {
-      console.error("Invalid timestamp"); // eslint-disable-line no-console
-      return timestamp;
-    }
-    var utcDate = new Date(Date.UTC(
-      matches[1],
-      matches[2] - 1 /* zero indexed */,
-      matches[3],
-      matches[4],
-      matches[5],
-      matches[6]
-    ));
-    var options = { year: "numeric", month: "long", day: "numeric" };
-    return utcDate.toLocaleString("en-us", options);
-  }
-
   /**
    * Brute force inline css style reset
    */
@@ -73,14 +54,10 @@
     return el;
   }
 
-  function createBanner(url, response) {
+  function createBanner(wayback_url) {
     if (document.getElementById("no-more-404s-message") !== null) {
       return;
     }
-    var wayback_url = response.archived_snapshots.closest.url;
-    var timestamp = response.archived_snapshots.closest.timestamp;
-    var date = convertFromTimestamp(timestamp);
-
     document.body.appendChild(
       createEl("div",
         function(el) {
@@ -125,7 +102,19 @@
             el.appendChild(document.createTextNode("View a saved version courtesy of the Wayback Machine."));
             el.onclick = function(e) {
               archiveLinkWasClicked = true;
-              sendTelemetry("viewed");
+
+              // Work-around for myspace which hijacks the link
+              if (window.location.hostname.indexOf("myspace.com") >= 0) {
+                sendTelemetry("viewed", function() {
+                  setInterval(function() {
+                    window.location.href = wayback_url;
+                  }, 100);
+                });
+                e.preventDefault();
+                return false;
+              } else {
+                sendTelemetry("viewed");
+              }
             };
           })
         ),
@@ -189,7 +178,7 @@
       // Some pages use javascript to update the dom so poll to ensure
       // the banner gets recreated if it is deleted.
       enforceBannerInterval = setInterval(function() {
-        createBanner(wayback_page_url, wayback_response);
+        createBanner(wayback_response.archived_snapshots.closest.url);
       }, 500);
 
       // Bind leave page for telemetry

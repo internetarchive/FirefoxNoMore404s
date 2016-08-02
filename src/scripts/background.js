@@ -1,4 +1,4 @@
-var VERSION = "1.5.2";
+var VERSION = "1.5.3";
 
 /**
  * Header callback
@@ -73,10 +73,10 @@ function telemetryGenerator(action) {
     if (actionAlreadySent === false) {
       testpilotPingChannel.postMessage({
         "test": "No More 404s",
-        "version": VERSION,
         "agent": navigator.userAgent,
         "payload": {
           "action": action,
+          "version": VERSION
         }
       });
     } else {

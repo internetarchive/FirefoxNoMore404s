@@ -1,7 +1,7 @@
 {
   "name": "FirefoxNoMore404s",
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "author": "Internet Archive (https://archive.org/)",
   "bugs": {
     "url": "https://github.com/internetarchive/FirefoxNoMore404s/issues"
