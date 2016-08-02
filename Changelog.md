@@ -1,3 +1,6 @@
+## v1.5.2
+- Version bump to test automatic updating
+
 ## v1.5.1
 - Add external update URL
 

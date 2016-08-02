@@ -1,4 +1,4 @@
-var VERSION = "1.5.1";
+var VERSION = "1.5.2";
 
 /**
  * Header callback
