@@ -1,10 +1,5 @@
 # METRICS
 
-**We are unable to use our existing Telemetry system to record metrics data
-from FirefoxNoMore404s.**  See [issue 433](https://github.com/mozilla/testpilot/issues/433)
-for details.  That means the "how" part of this document might change, but the
-  "what" part should be pretty accurate.
-
 ## Data Analysis
 The collected data will primarily be used to answer the following questions.
 Images are used for visualization and are not composed of actual data.
@@ -50,8 +45,6 @@ when:
 * A user hits a 404, chooses to dismiss the archive version prompt
 * A user hits a 404, does not interact with the prompt, and navigates away or
   closes the tab
-
-TODO -- this part is still under construction
 
 The `action` below is one of:
 * 'viewed':  the user clicked through to the archived version
