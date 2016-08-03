@@ -6,6 +6,7 @@ env:
 
 globals:
   chrome: false
+  BroadcastChannel: false
 
 root: true
 
