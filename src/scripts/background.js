@@ -1,3 +1,7 @@
+/*
+ * License: AGPL-3
+ * Copyright 2016, Internet Archive
+ */
 var VERSION = "1.5.3";
 
 /**
@@ -5,25 +9,22 @@ var VERSION = "1.5.3";
  */
 chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
-    // chrome.tabs.executeScript(details.tabId, {
-    //   code: 'window.__DEBUG_MESSAGE = ' + JSON.stringify(isIncognito),
-    // });
     if (isIncognito === false &&
         details.statusCode === 404 &&
         details.frameId === 0 &&
         !details.url.startsWith("http://web.archive.org/web/") &&
         !details.url.startsWith("https://web.archive.org/web/")) {
       wmAvailabilityCheck(details.url, function(response, url) {
-        // inject response into page
-        chrome.tabs.executeScript(details.tabId, {
-          code: "window.__WAYBACK_PAGE_URL = " + JSON.stringify(url)
-        });
-        chrome.tabs.executeScript(details.tabId, {
-          code: "window.__WAYBACK_RESPONSE = " + JSON.stringify(response)
-        });
         chrome.tabs.executeScript(details.tabId, {
           file: "scripts/client.js"
+        }, function() {
+          chrome.tabs.sendMessage(details.tabId, {
+            type: "SHOW_BANNER",
+            wayback_url: response.archived_snapshots.closest.url
+          });
         });
+      }, function(response, url) {
+        telemetry.none();
       });
     }
   }
@@ -51,9 +52,8 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
         response.results[0].archived_snapshots.closest.available === true &&
         response.results[0].archived_snapshots.closest.status.indexOf("2") === 0) {
       onsuccess(response.results[0], url);
-    } else if (onfail && response.archived_snapshots &&
-        !response.archived_snapshots.hasOwnProperty("closest")) {
-      onfail(response.results[0], url);
+    } else if (onfail) {
+      onfail(response, url);
     }
   };
   xhr.send(requestParams);

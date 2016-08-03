@@ -1,3 +1,7 @@
+/*
+ * LICENSE: AGPL-3
+ * Copyright 2016, Internet Archive
+ */
 (function() {
   var enforceBannerInterval;
   var archiveLinkWasClicked = false;
@@ -171,26 +175,28 @@
     bannerWasShown = true;
   }
 
-  function checkIt() {
-    var wayback_page_url = window.__WAYBACK_PAGE_URL;
-    var wayback_response = window.__WAYBACK_RESPONSE;
-    if (wayback_page_url && wayback_response) {
-      // Some pages use javascript to update the dom so poll to ensure
-      // the banner gets recreated if it is deleted.
-      enforceBannerInterval = setInterval(function() {
-        createBanner(wayback_response.archived_snapshots.closest.url);
-      }, 500);
+  function checkIt(wayback_url) {
+    // Some pages use javascript to update the dom so poll to ensure
+    // the banner gets recreated if it is deleted.
+    enforceBannerInterval = setInterval(function() {
+      createBanner(wayback_url);
+    }, 500);
 
-      // Bind leave page for telemetry
-      window.onunload = function() {
-        if (bannerWasShown && !bannerWasClosed && !archiveLinkWasClicked) {
-          sendTelemetry("ignored");
-        }
-      };
-    } else {
-      sendTelemetry("none");
-    }
+    // Bind leave page for telemetry
+    window.onunload = function() {
+      if (bannerWasShown && !bannerWasClosed && !archiveLinkWasClicked) {
+        sendTelemetry("ignored");
+      }
+    };
   }
 
-  checkIt();
+  // Listen to message from background.js
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.type === "SHOW_BANNER") {
+        if (request.wayback_url) {
+          checkIt(request.wayback_url);
+        }
+      }
+  });
 })();
