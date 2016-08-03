@@ -1,3 +1,9 @@
+## v1.5.4
+- Remove code injection from background.js in favor of message passing
+- Add validation of response URL
+- Fix ES Lint issue
+- Update metrics documentation
+
 ## v1.5.3
 - Fix issue with 404 pages on Myspace.com
 - Remove some unused code.
