@@ -14,16 +14,16 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         details.frameId === 0 &&
         !details.url.startsWith("http://web.archive.org/web/") &&
         !details.url.startsWith("https://web.archive.org/web/")) {
-      wmAvailabilityCheck(details.url, function(response, url) {
+      wmAvailabilityCheck(details.url, function(wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
           file: "scripts/client.js"
         }, function() {
           chrome.tabs.sendMessage(details.tabId, {
             type: "SHOW_BANNER",
-            wayback_url: response.archived_snapshots.closest.url
+            wayback_url: wayback_url
           });
         });
-      }, function(response, url) {
+      }, function() {
         telemetry.none();
       });
     }
@@ -33,7 +33,9 @@ chrome.webRequest.onCompleted.addListener(function(details) {
   });
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
-
+/**
+ * Checks Wayback Machine API for url snapshot
+ */
 function wmAvailabilityCheck(url, onsuccess, onfail) {
   var xhr = new XMLHttpRequest();
   var requestUrl = "https://archive.org/wayback/available";
@@ -44,21 +46,44 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onload = function() {
     var response = JSON.parse(xhr.responseText);
-    if (response.results &&
-        response.results[0] &&
-        response.results[0].archived_snapshots &&
-        response.results[0].archived_snapshots.closest &&
-        response.results[0].archived_snapshots.closest.available &&
-        response.results[0].archived_snapshots.closest.available === true &&
-        response.results[0].archived_snapshots.closest.status.indexOf("2") === 0) {
-      onsuccess(response.results[0], url);
+    var wayback_url = getWaybackUrlFromResponse(response);
+    if (wayback_url !== null) {
+      onsuccess(wayback_url, url);
     } else if (onfail) {
-      onfail(response, url);
+      onfail();
     }
   };
   xhr.send(requestParams);
 }
 
+/**
+ * @param response {object}
+ * @return {string or null}
+ */
+function getWaybackUrlFromResponse(response) {
+  if (response.results &&
+      response.results[0] &&
+      response.results[0].archived_snapshots &&
+      response.results[0].archived_snapshots.closest &&
+      response.results[0].archived_snapshots.closest.available &&
+      response.results[0].archived_snapshots.closest.available === true &&
+      response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
+      isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
+    return response.results[0].archived_snapshots.closest.url;
+  } else {
+    return null;
+  }
+}
+
+/**
+ * Makes sure response is a valid URL to prevent code injection
+ * @param url {string}
+ * @return {bool}
+ */
+function isValidSnapshotUrl(url) {
+  return ((typeof url) === "string" &&
+    (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
+}
 
 /**
  * Helper generaters a telemetry function. Each action can only be sent once.
