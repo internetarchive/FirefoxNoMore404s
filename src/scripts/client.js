@@ -28,6 +28,7 @@
     el.style.display = "inline";
     el.style.backgroundColor = "transparent";
     el.style.color = "#333";
+    el.style.textAlign = "left";
   }
 
   /**
@@ -83,6 +84,7 @@
           el.style.transition =  "transform 500ms ease-out";
           el.style.transform =  "translate(0, -100%)";
           el.style.zIndex =  "999999999";
+          el.style.overflow = "hidden";
         },
         createEl("img", function(el) {
           el.src = chrome.extension.getURL("images/insetIcon.svg");
