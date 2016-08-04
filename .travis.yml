@@ -3,10 +3,5 @@ language: node_js
 node_js:
   - 4
 
-before_install:
-  - npm i addons-linter -g
-  - rm -rf build_unsigned/*.zip
-
 script:
   - npm run build_unsigned
-  - addons-linter build_unsigned/*.zip -o text --self-hosted
