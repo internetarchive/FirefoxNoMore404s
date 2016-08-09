@@ -1,3 +1,8 @@
+## v1.5.5
+- Update exclusion policy and add localhost domains
+- Raise strict_min_version to FF 48
+- More CSS fixes
+
 ## v1.5.4
 - Remove code injection from background.js in favor of message passing
 - Add validation of response URL
