@@ -4,6 +4,22 @@
  */
 var VERSION = "1.5.4";
 
+var excluded_urls = [
+  "web.archive.org/web/",
+  "localhost",
+  "0.0.0.0",
+  "127.0.0.1"
+];
+
+function isValidUrl(url) {
+  for (var i = 0; i < excluded_urls.length; i++) {
+    if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /**
  * Header callback
  */
@@ -12,8 +28,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
     if (isIncognito === false &&
         details.statusCode === 404 &&
         details.frameId === 0 &&
-        !details.url.startsWith("http://web.archive.org/web/") &&
-        !details.url.startsWith("https://web.archive.org/web/")) {
+        isValidUrl(details.url)) {
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
           file: "scripts/client.js"
