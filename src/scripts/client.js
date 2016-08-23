@@ -72,16 +72,16 @@
           el.style.left = "0";
           el.style.width = "100%";
           el.style.minHeight = "50px";
+          el.style.borderBottom = "1px solid rgba(0,0,0,.3)"
           el.style.boxSizing = "border-box";
           el.style.display = "flex";
           el.style.alignItems = "center";
           el.style.justifyContent = "space-between";
           el.style.padding = "5px 14px 5px 12px";
           el.style.background = "linear-gradient(#FBFBFB, #E6E6E6)";
-          el.style.boxShadow =  "0 0 10px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, 0.3);";
           el.style.color =  "#333";
           el.style.font =  "14px message-box, sans-serif";
-          el.style.transition =  "transform 500ms ease-out";
+          el.style.transition =  "transform 150ms cubic-bezier(.1,.7,.15,1)";
           el.style.transform =  "translate(0, -100%)";
           el.style.zIndex =  "999999999";
           el.style.overflow = "hidden";
@@ -97,6 +97,7 @@
         createEl("div",
           function(el) {
             el.style.flex = "1";
+            el.style.lineHeight = "1.2em";
             el.style.margin = "0 0 0 8px";
           },
           document.createTextNode("This page appears to be missing. "),
