@@ -2,7 +2,7 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.5.5";
+var VERSION = "1.5.6";
 
 var excluded_urls = [
   "web.archive.org/web/",

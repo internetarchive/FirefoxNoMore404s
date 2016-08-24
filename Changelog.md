@@ -1,3 +1,6 @@
+## v1.5.6
+- Make animation a bit more agressive by @johngruen
+
 ## v1.5.5
 - Update exclusion policy and add localhost domains
 - Raise strict_min_version to FF 48
