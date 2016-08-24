@@ -25,9 +25,11 @@ function isValidUrl(url) {
  */
 chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
+    var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
+                         509, 520, 521, 523, 524, 525, 526];
     if (isIncognito === false &&
-        details.statusCode === 404 &&
         details.frameId === 0 &&
+        httpFailCodes.indexOf(details.statusCode) >= 0 &&
         isValidUrl(details.url)) {
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
