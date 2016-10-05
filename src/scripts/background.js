@@ -84,10 +84,14 @@ function getWaybackUrlFromResponse(response) {
       response.results[0].archived_snapshots.closest.available === true &&
       response.results[0].archived_snapshots.closest.status.indexOf("2") === 0 &&
       isValidSnapshotUrl(response.results[0].archived_snapshots.closest.url)) {
-    return response.results[0].archived_snapshots.closest.url;
+    return makeHttps(response.results[0].archived_snapshots.closest.url);
   } else {
     return null;
   }
+}
+
+function makeHttps(url) {
+  return url.replace(/^http:/, "https:");
 }
 
 /**
