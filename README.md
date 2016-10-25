@@ -1,4 +1,4 @@
-## Developing
+## Developing [![Build Status](https://travis-ci.org/internetarchive/FirefoxNoMore404s.svg?branch=master)](https://travis-ci.org/internetarchive/FirefoxNoMore404s)
 
 This is a "WebExtension". See https://developer.mozilla.org/Add-ons/WebExtensions/Your_first_WebExtension
 
