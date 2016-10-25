@@ -12,7 +12,7 @@
     "gecko": {
       "id": "wayback_machine@mozilla.org",
       "strict_min_version": "48.0",
-      "update_url": "https://testpilot.cdn.mozilla.net/nomore404s/nomore404s.json"
+      "update_url": "https://testpilot.firefox.com/files/nomore404s/nomore404s.json"
     }
   },
   "permissions": [
