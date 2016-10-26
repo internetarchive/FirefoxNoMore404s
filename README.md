@@ -1,4 +1,6 @@
-## Developing [![Build Status](https://travis-ci.org/internetarchive/FirefoxNoMore404s.svg?branch=master)](https://travis-ci.org/internetarchive/FirefoxNoMore404s)
+# No More 404s [![Build Status](https://travis-ci.org/internetarchive/FirefoxNoMore404s.svg?branch=master)](https://travis-ci.org/internetarchive/FirefoxNoMore404s) [![devDependencies Status](https://david-dm.org/internetarchive/FirefoxNoMore404s/dev-status.svg)](https://david-dm.org/internetarchive/FirefoxNoMore404s?type=dev)
+
+## Developing
 
 This is a "WebExtension". See https://developer.mozilla.org/Add-ons/WebExtensions/Your_first_WebExtension
 
