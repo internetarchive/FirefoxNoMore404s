@@ -7,8 +7,8 @@
     "url": "https://github.com/internetarchive/FirefoxNoMore404s/issues"
   },
   "devDependencies": {
-    "eslint": "3.1.1",
-    "web-ext": "1.4.0"
+    "eslint": "^3.8.1",
+    "web-ext": "^1.6.0"
   },
   "homepage": "https://archive.org/",
   "keywords": [],
