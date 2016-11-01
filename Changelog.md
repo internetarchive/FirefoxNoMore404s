@@ -1,5 +1,10 @@
+## v1.6.0
+- Support additional easy to detect HTTP failures.
+- Applied lossless zopfli compression to PNG icons.
+- point updateurl to the main site.
+
 ## v1.5.6
-- Make animation a bit more agressive by @johngruen
+- Make animation a bit more aggressive by @johngruen
 
 ## v1.5.5
 - Update exclusion policy and add localhost domains
