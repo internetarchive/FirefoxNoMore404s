@@ -26,6 +26,7 @@
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
-    "images/close.svg"
+    "images/close.svg",
+    "images/car.gif"
   ]
 }
