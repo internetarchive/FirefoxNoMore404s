@@ -17,10 +17,11 @@
     el.style.border = 0;
     el.style.fontSize = "100%";
     el.style.font = "inherit";
+    el.style.fontFamily = "sans-serif";
     el.style.verticalAlign = "baseline";
     el.style.lineHeight = "1";
     el.style.boxSizing = "content-box";
-    el.style.overflow = "auto";
+    el.style.overflow = "unset";
     el.style.fontWeight = "inherit";
     el.style.height = "auto";
     el.style.position = "relative";
@@ -107,7 +108,6 @@
                 el.style.fontWeight = "700";
                 el.style.height = "54px";
                 el.style.justifyContent = "center";
-                el.style.textAlign = "center";
                 el.appendChild(document.createTextNode("404? No Worries!"));
               },
               createEl("button",
@@ -117,8 +117,8 @@
                   el.style.alignItems = "center";
                   el.style.justifyContent = "center";
                   el.style.transition = "background-color 150ms";
-                  el.style.top = "13px";
-                  el.style.right = "13px";
+                  el.style.top = "12px";
+                  el.style.right = "16px";
                   el.style.width = "22px";
                   el.style.height = "22px";
                   el.style.borderRadius = "3px";
@@ -150,11 +150,12 @@
                 },
                 createEl("img",
                   function(el) {
-                el.src = chrome.extension.getURL("images/close.svg");
-                el.alt = "close";
-                el.style.height = "16px";
-                el.style.transition = "background-color 100ms";
-                el.style.width = "16px";
+                    el.src = chrome.extension.getURL("images/close.svg");
+                    el.alt = "close";
+                    el.style.height = "16px";
+                    el.style.transition = "background-color 100ms";
+                    el.style.width = "16px";
+                    el.style.margin = "0 auto";
                   }
                 )
               )
@@ -162,7 +163,7 @@
             createEl("p", function(el) {
               el.appendChild(document.createTextNode("View a saved version courtesy of the Wayback Machine."));
               el.style.fontSize = "16px";
-              el.style.margin = "20px 0 0";
+              el.style.margin = "20px 0 4px 0";
               el.style.textAlign = "center";
             }),
             createEl("img", function(el) {
