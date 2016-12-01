@@ -1,3 +1,6 @@
+## v1.7.0
+- Major design change by @johngruen. No longer a banner, but rather a modal.
+
 ## v1.6.0
 - Support additional easy to detect HTTP failures.
 - Applied lossless zopfli compression to PNG icons.
