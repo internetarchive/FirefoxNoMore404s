@@ -20,33 +20,52 @@ function isValidUrl(url) {
   return true;
 }
 
+
+function executeCheck(details) {
+  wmAvailabilityCheck(details.url, function(wayback_url, url) {
+    console.log(wayback_url, url);
+    chrome.tabs.executeScript(details.tabId, {
+      file: "scripts/client.js"
+    }, function() {
+      console.log('sending message', details.tabId);
+      chrome.tabs.sendMessage(details.tabId, {
+        type: "SHOW_BANNER",
+        wayback_url: wayback_url
+      });
+    });
+  }, function() {
+    telemetry.none();
+  });
+}
+
 /**
  * Header callback
  */
 chrome.webRequest.onCompleted.addListener(function(details) {
-  function tabIsReady(isIncognito) {
+  chrome.tabs.get(details.tabId, function(tab) {
     var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
                          509, 520, 521, 523, 524, 525, 526];
-    if (isIncognito === false &&
-        details.frameId === 0 &&
-        httpFailCodes.indexOf(details.statusCode) >= 0 &&
+    if (tab.incognito === false && details.frameId === 0 &&
+          httpFailCodes.indexOf(details.statusCode) >= 0 &&
         isValidUrl(details.url)) {
-      wmAvailabilityCheck(details.url, function(wayback_url, url) {
-        chrome.tabs.executeScript(details.tabId, {
-          file: "scripts/client.js"
-        }, function() {
-          chrome.tabs.sendMessage(details.tabId, {
-            type: "SHOW_BANNER",
-            wayback_url: wayback_url
-          });
-        });
-      }, function() {
-        telemetry.none();
-      });
+      executeCheck(details);
     }
-  }
+  });
+}, {urls: ["<all_urls>"], types: ["main_frame"]});
+
+chrome.webRequest.onErrorOccurred.addListener(function(details) {
+  console.log(details);
   chrome.tabs.get(details.tabId, function(tab) {
-    tabIsReady(tab.incognito);
+    console.log(tab);
+    if (tab.incognito === false && details.frameId === 0 &&
+          details.error == "NS_ERROR_NET_ON_RESOLVED" &&
+          isValidUrl(details.url)) {
+      console.log('bingo');
+      // NOTE: This isn't working on the built-in "Server not found" page.
+      // chrome.tabs.sendMessage fails with "Error: Could not establish connection.
+      // "Receiving end does not exist
+      executeCheck(details);
+    }
   });
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 

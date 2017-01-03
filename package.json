@@ -23,6 +23,6 @@
     "lint": "eslint .",
     "sign": "rm ./build/* || true && (export $(cat CREDENTIALS | xargs) && web-ext sign --verbose -s=src -a=build  --api-key=$JWT_ISSUER --api-secret=$JWT_SECRET) && git add *.xpi",
     "test": "npm run lint",
-    "dev": "web-ext run -s=src --pre-install"
+    "dev": "web-ext run -s=src --verbose"
   }
 }
