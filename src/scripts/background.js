@@ -2,7 +2,7 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.7.0";
+var VERSION = "1.8.0";
 
 var excluded_urls = [
   "web.archive.org/web/",
@@ -131,6 +131,7 @@ function telemetryGenerator(action) {
   }
 }
 
+
 var telemetry = {
   // 'viewed': the user clicked through to the archived version
   viewed: telemetryGenerator("viewed"),
@@ -148,5 +149,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     sendResponse(true);
   } else {
     sendResponse(false);
+  }
+});
+
+
+chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
+  console.log(message);
+  if(message.message=='openurl'){
+    chrome.tabs.create({ url: message.url });
   }
 });

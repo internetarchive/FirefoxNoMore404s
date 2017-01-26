@@ -1,3 +1,6 @@
+## v1.8.0
+- Add toolbar button for Save Page Now, Recent Version, First Version
+
 ## v1.7.0
 - Major design change by @johngruen. No longer a banner, but rather a modal.
 
