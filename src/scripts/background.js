@@ -152,10 +152,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 
-
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  console.log(message);
-  if(message.message=='openurl'){
-    chrome.tabs.create({ url: message.url });
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.message == 'openurl') {
+    chrome.tabs.create({ url: request.url });
   }
 });
