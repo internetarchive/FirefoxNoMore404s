@@ -2,7 +2,7 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.8.0";
+var VERSION = "1.8.1";
 
 var excluded_urls = [
   "web.archive.org/web/",
@@ -161,14 +161,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
       url = page_url.replace(pattern, "");
       open_url = wayback_url+encodeURI(url);
-      if(message.method!='save'){
+      if (message.method!='save') {
         wmAvailabilityCheck(url,function(){
           chrome.tabs.create({ url:  open_url});
         },function(){
           chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
           });
-        })  
-      }else{
+        })
+      } else {
         chrome.tabs.create({ url:  open_url});
       }
     });
