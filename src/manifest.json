@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "No More 404s",
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "homepage_url": "https://archive.org/",
   "icons": {
     "48": "images/icon.png",
@@ -16,6 +16,7 @@
     }
   },
   "permissions": [
+    "tabs",
     "webRequest",
     "http://*/*",
     "https://*/*",

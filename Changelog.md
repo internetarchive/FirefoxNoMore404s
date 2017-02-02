@@ -1,3 +1,6 @@
+## v1.8.1
+- Removed redundant code, added feature to check availability of the URL in archive for First Version & Recent Version
+
 ## v1.8.0
 - Add toolbar button for Save Page Now, Recent Version, First Version
 
