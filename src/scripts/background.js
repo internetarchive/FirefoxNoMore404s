@@ -29,6 +29,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
                          509, 520, 521, 523, 524, 525, 526];
     if (isIncognito === false &&
         details.frameId === 0 &&
+        details.statusCode != 200 &&
         httpFailCodes.indexOf(details.statusCode) >= 0 &&
         isValidUrl(details.url)) {
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
