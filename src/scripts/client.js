@@ -108,7 +108,7 @@
                 el.style.fontWeight = "700";
                 el.style.height = "54px";
                 el.style.justifyContent = "center";
-                el.appendChild(document.createTextNode("404? No Worries!"));
+                el.appendChild(document.createTextNode("Page missing? No worries!"));
               },
               createEl("button",
                 function(el) {
