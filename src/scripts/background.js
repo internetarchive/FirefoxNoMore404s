@@ -58,7 +58,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   var requestUrl = "https://archive.org/wayback/available";
   var requestParams = "url=" + encodeURI(url);
   xhr.open("POST", requestUrl, true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/" + VERSION);
   xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onload = function() {
