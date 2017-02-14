@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "No More 404s",
+  "name": "Wayback Machine",
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
   "version": "1.8.1",
   "homepage_url": "https://archive.org/",
@@ -11,15 +11,16 @@
   "applications": {
     "gecko": {
       "id": "wayback_machine@mozilla.org",
-      "strict_min_version": "48.0",
-      "update_url": "https://testpilot.firefox.com/files/nomore404s/nomore404s.json"
+      "strict_min_version": "48.0"
     }
   },
   "permissions": [
     "tabs",
     "webRequest",
+    "webRequestBlocking",
     "http://*/*",
     "https://*/*",
+    "*://*/*",
     "<all_urls>"
   ],
   "background": {
@@ -28,7 +29,7 @@
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",
-    "images/car.gif"
+    "images/logo.gif"
   ],
   "browser_action": {
     "default_icon": "images/icon.png",

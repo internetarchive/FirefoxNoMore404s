@@ -41,7 +41,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
           });
         });
       }, function() {
-        telemetry.none();
+        
       });
     }
   }
@@ -106,51 +106,6 @@ function isValidSnapshotUrl(url) {
     (url.indexOf("http://") === 0 || url.indexOf("https://") === 0));
 }
 
-/**
- * Helper generaters a telemetry function. Each action can only be sent once.
- * @param action {string}
- * @return {function}
- */
-function telemetryGenerator(action) {
-  var TESTPILOT_TELEMETRY_CHANNEL = "testpilot-telemetry";
-  var testpilotPingChannel = new BroadcastChannel(TESTPILOT_TELEMETRY_CHANNEL);
-  var actionAlreadySent = false;
-  return function() {
-    if (actionAlreadySent === false) {
-      testpilotPingChannel.postMessage({
-        "test": "No More 404s",
-        "agent": navigator.userAgent,
-        "payload": {
-          "action": action,
-          "version": VERSION
-        }
-      });
-    } else {
-      actionAlreadySent = true;
-    }
-  }
-}
-
-
-var telemetry = {
-  // 'viewed': the user clicked through to the archived version
-  viewed: telemetryGenerator("viewed"),
-  // 'dismissed': the user dismissed the prompt
-  dismissed: telemetryGenerator("dismissed"),
-  // 'ignored': the user ignored the prompt
-  ignored: telemetryGenerator("ignored"),
-  // 'none': will be 'none' if there isn't an archive available
-  none: telemetryGenerator("none"),
-};
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.action in telemetry) {
-    telemetry[request.action]();
-    sendResponse(true);
-  } else {
-    sendResponse(false);
-  }
-});
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
@@ -174,3 +129,22 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     });
   }
 });
+
+chrome.webRequest.onErrorOccurred.addListener(function(details) {
+  function tabIsReady(isIncognito) {
+    if(details.error == 'NS_ERROR_NET_ON_CONNECTING_TO'  || details.error == 'NS_ERROR_NET_ON_RESOLVED'){
+      wmAvailabilityCheck(details.url, function(wayback_url, url) {
+        chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?url="+wayback_url});
+      }, function() {
+        
+      });
+    }
+  }
+  if(details.tabId >0 ){
+    chrome.tabs.get(details.tabId, function(tab) {
+      tabIsReady(tab.incognito);
+    });  
+  }
+
+  
+}, {urls: ["<all_urls>"], types: ["main_frame"]});
