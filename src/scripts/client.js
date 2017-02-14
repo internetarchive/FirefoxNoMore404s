@@ -37,9 +37,6 @@
    * @param action {string}
    * @param complete {function}
    */
-  function sendTelemetry(action, complete) {
-    chrome.runtime.sendMessage({action: action}, complete);
-  }
 
   /**
    * @param {string} type
@@ -108,7 +105,7 @@
                 el.style.fontWeight = "700";
                 el.style.height = "54px";
                 el.style.justifyContent = "center";
-                el.appendChild(document.createTextNode("404? No Worries!"));
+                el.appendChild(document.createTextNode("Page not available?"));
               },
               createEl("button",
                 function(el) {
@@ -129,7 +126,6 @@
                     clearInterval(enforceBannerInterval);
                     document.getElementById("no-more-404s-message").style.display = "none";
                     bannerWasClosed = true;
-                    sendTelemetry("dismissed");
                   };
                   el.onmouseenter = function() {
                     el.style.backgroundColor = "rgba(0,0,0,.1)";
@@ -161,17 +157,19 @@
               )
             ),
             createEl("p", function(el) {
-              el.appendChild(document.createTextNode("View a saved version courtesy of the Wayback Machine."));
+              el.appendChild(document.createTextNode("View a saved version courtesy of the"));
               el.style.fontSize = "16px";
               el.style.margin = "20px 0 4px 0";
               el.style.textAlign = "center";
             }),
             createEl("img", function(el) {
               el.id = "no-more-404s-image";
-              el.src = chrome.extension.getURL("images/car.gif");
-              el.style.height = "300px";
+              el.src = chrome.extension.getURL("images/logo.gif");
+              el.style.height = "auto";
               el.style.position = "relative";
-              el.style.width = "420px";
+              el.style.width = "100%";
+              el.style.boxSizing = "border-box";
+              el.style.padding = "10px 22px";
             }),
             createEl("a", function(el) {
               el.id = "no-more-404s-message-link";
@@ -187,7 +185,7 @@
               el.style.justifyContent = "center";
               el.style.margin = "20px";
               el.style.textDecoration = "none";
-              el.appendChild(document.createTextNode("View saved version"));
+              el.appendChild(document.createTextNode("Click here to see archived version"));
               el.onmouseenter = function() {
                 el.style.backgroundColor = "#0675d3";
                 el.style.border = "1px solid #0568ba";
@@ -209,15 +207,9 @@
 
                 // Work-around for myspace which hijacks the link
                 if (window.location.hostname.indexOf("myspace.com") >= 0) {
-                  sendTelemetry("viewed", function() {
-                    setInterval(function() {
-                      window.location.href = wayback_url;
-                    }, 100);
-                  });
                   e.preventDefault();
                   return false;
                 } else {
-                  sendTelemetry("viewed");
                 }
               };
             })
@@ -242,15 +234,9 @@
       createBanner(wayback_url);
     }, 500);
 
-    // Bind leave page for telemetry
-    window.onunload = function() {
-      if (bannerWasShown && !bannerWasClosed && !archiveLinkWasClicked) {
-        sendTelemetry("ignored");
-      }
-    };
   }
 
-  // Listen to message from background.js
+// Listen to message from background.js
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       if (request.type === "SHOW_BANNER") {
@@ -259,4 +245,6 @@
         }
       }
   });
+
+
 })();

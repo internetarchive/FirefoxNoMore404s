@@ -1,3 +1,12 @@
+## v1.8.2
+- Bug fixes #82, #83. Handled DNS error, renamed car.gif to logo.gif across all files, minor UI change
+
+## v1.8.1
+- Removed redundant code, added feature to check availability of the URL in archive for First Version & Recent Version
+
+## v1.8.0
+- Add toolbar button for Save Page Now, Recent Version, First Version
+
 ## v1.7.0
 - Major design change by @johngruen. No longer a banner, but rather a modal.
 
