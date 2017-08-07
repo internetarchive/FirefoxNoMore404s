@@ -109,9 +109,9 @@ function isValidSnapshotUrl(url) {
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var tab = tabs[0];
-      var page_url = tab.url;
+    
+      
+      var page_url = message.page_url;
       wayback_url = message.wayback_url;
       var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
       url = page_url.replace(pattern, "");
@@ -126,7 +126,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       } else {
         chrome.tabs.create({ url:  open_url});
       }
-    });
+    
   }
 });
 
@@ -148,3 +148,5 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 
   
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
+
+

@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Wayback Machine",
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
-  "version": "1.8.2",
+  "version": "1.8.1",
   "homepage_url": "https://archive.org/",
   "icons": {
     "48": "images/icon.png",
@@ -16,20 +16,24 @@
   },
   "permissions": [
     "tabs",
-    "webRequest",
-    "webRequestBlocking",
-    "http://*/*",
-    "https://*/*",
-    "*://*/*",
-    "<all_urls>"
+        "activeTab",
+        "webRequest",
+        "webRequestBlocking",
+        "http://*/*",
+        "https://*/*",
+        "*://*/*",
+        "<all_urls>",
+        "notifications"
   ],
   "background": {
-    "scripts": ["scripts/background.js"]
+    "scripts": ["scripts/background.js"],
+    "persistent": true
   },
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",
-    "images/logo.gif"
+    "images/logo.gif",
+    "scripts/client.js"
   ],
   "browser_action": {
     "default_icon": "images/icon.png",
