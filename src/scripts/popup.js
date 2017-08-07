@@ -194,7 +194,9 @@ function search_tweet_function(eventObj){
     }else{
         var url=search_term();
     }
-    if(alexa_url(url)){
+    if(wbm_url(url)){
+        url=remove_wbm(url);
+    }else if(alexa_url(url)){
         url=remove_alexa(url);
     }else if(whois_url(url)){
         url=remove_whois(url);
