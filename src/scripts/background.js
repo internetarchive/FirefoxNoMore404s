@@ -116,6 +116,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
       url = page_url.replace(pattern, "");
       open_url = wayback_url+encodeURI(url);
+      console.log(open_url);
       if (message.method!='save') {
         wmAvailabilityCheck(url,function(){
           chrome.tabs.create({ url:  open_url});

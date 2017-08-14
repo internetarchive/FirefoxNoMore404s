@@ -1,5 +1,5 @@
 global_url="";
-
+count=0;
 function wbm_url(url){
     if(url.includes('web.archive.org')){
         return true;
@@ -83,6 +83,7 @@ function recent_capture_function(){
         url=remove_whois(url);
     }
 	var wb_url = "https://web.archive.org/web/2/";
+    
 	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url,page_url:url, method:'recent' }, function(response) {
 	});
 }
@@ -119,7 +120,7 @@ function get_url(){
 }
 
 function search_term(){
-    var term="";
+    var term=document.getElementById('search_input').value;
     return(term); 
 }
 
@@ -211,6 +212,68 @@ function search_tweet_function(eventObj){
     window.open(open_url, 'newwindow', 'width=800, height=280,left=0');    
 }
 
+function display_list(key_word){
+    document.getElementById('suggestion-box').style.display='none';
+    document.getElementById('suggestion-box').innerHTML="";
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "https://web.archive.org/__wb/search/host?q="+key_word, true);
+    xhr.onload=function(){
+    console.log('Loaded');
+    document.getElementById('suggestion-box').style.display='none';
+    document.getElementById('suggestion-box').innerHTML="";    
+        var data=JSON.parse(xhr.response);
+        var n=data.hosts.length
+        if(n>0 && document.getElementById('search_input').value!=''){
+           document.getElementById('suggestion-box').style.display='block';
+           for(var i=0;i<n;i++){
+               var name=data.hosts[i].display_name;
+               var li=document.createElement('li');
+               var a=document.createElement('a');
+               a.onclick=function(event){
+                   document.getElementById('search_input').value=event.target.innerHTML;
+                   document.getElementById('suggestion-box').style.display='none';
+                   document.getElementById('suggestion-box').innerHTML="";
+                   
+               };
+               a.setAttribute('role','button');
+               a.innerHTML=name;
+               li.appendChild(a);
+               document.getElementById('suggestion-box').appendChild(li);
+           }
+           
+        }
+    };
+    xhr.send(null);
+}
+
+function display_suggestions(e){
+    count++;
+    //console.log(count);
+    document.getElementById('suggestion-box').style.display='none';
+    document.getElementById('suggestion-box').innerHTML="";
+    
+    
+//    if((len)>=2){
+        //document.getElementById('suggestion-box').style.display='block';
+        window.setTimeout(function(){//setTimeout is used to get the text in the text field after key has been pressed
+    var len=document.getElementById('search_input').value.length;
+    console.log(len,document.getElementById('search_input').value);
+    if((len)>=3){
+    var key_word=document.getElementById('search_input').value;
+    display_list(key_word);
+    }else{
+        document.getElementById('suggestion-box').style.display='none';
+        document.getElementById('suggestion-box').innerHTML="";
+    }
+        
+    },0.1);
+//    }else{
+//        document.getElementById('suggestion-box').style.display='none';
+//        document.getElementById('suggestion-box').innerHTML="";
+//    }
+}
+
+
 window.onload=get_url;
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
@@ -222,6 +285,7 @@ document.getElementById('linkedin_share').onclick =social_share;
 document.getElementById('alexa_statistics').onclick =alexa_statistics_function;
 document.getElementById('whois_statistics').onclick =whois_statistics_function;
 document.getElementById('search_tweet').onclick =search_tweet_function;
+document.getElementById('search_input').addEventListener('keydown',display_suggestions);
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='urlnotfound'){
   	alert("URL not found in wayback archives!");

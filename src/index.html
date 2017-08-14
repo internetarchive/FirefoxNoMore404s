@@ -21,6 +21,17 @@
       </tr>
       <tr class="spaceUnder" align="center">
         <td>
+          <form class="search-toolbar-input-container"><div class="bootstrap-typeahead clearfix open" style="position: relative;"><div class="bootstrap-typeahead-input" tabindex="-1" style="outline: none; position: relative;"><input id="search_input"type="text" placeholder="Search" value="" autocomplete="off" class="form-control has-aux bootstrap-typeahead-input-main has-selection" style="background-color: transparent; display: block; position: relative; z-index: 1;">
+              <input type="text" tabindex="-1" value="" class="form-control has-aux bootstrap-typeahead-input-hint" style="border-color: transparent; bottom: 0px; box-shadow: none; color: rgb(165, 165, 165); display: block; position: absolute; top: 0px; width: 100%; z-index: 0;">
+              </div><ul id="suggestion-box" class="dropdown-menu bootstrap-typeahead-menu dropdown-menu-left" style="display:none; max-height: 300px; min-width:100%; overflow: auto;">
+<!--              <li class=""><a role="button">scontent.cdninstagram.com</a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent.xx.fbcdn.net</span></span></a></li><li class=""><a role="button"><span><span>www.</span><strong class="bootstrap-typeahead-highlight">sco</strong><span>op.it</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-a.cdninstagram.com</span></span></a></li><li class=""><a role="button"><span><strong class="bootstrap-typeahead-highlight">sco</strong><span>ntent-b.cdninstagram.com</span></span></a></li>-->
+              </ul></div><input type="submit" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;"></form>
+          <BR>
+        </td>
+      </tr>
+
+      <tr class="spaceUnder" align="center">
+        <td>
           <button type="button" class="btn btn-success" id="save_now" tabindex='-1'>Save Page Now</button>
           <BR>
         </td>
@@ -37,10 +48,10 @@
         </td>
       </tr>
             <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-primary" id="alexa_statistics" tabindex='-1'>Alexa Statistics</button></td>
+                <td><button type="button" class="btn btn-info" id="alexa_statistics" tabindex='-1'>Alexa</button></td>
             </tr>
             <tr class="spaceUnder" align="center">
-                <td><button type="button" class="btn btn-success" id="whois_statistics" tabindex='-1'>Whois Statistics</button></td>
+                <td><button type="button" class="btn btn-info" id="whois_statistics" tabindex='-1'>Whois</button></td>
                <tr class="spaceUnder" align="center">
                 <td><button type="button" class="btn btn-default btn-twitter" id="search_tweet" tabindex="-1" style="color:#ffffff"><b> <i class="fa fa-twitter"></i> Tweets</b></button><BR></td>
             </tr>
@@ -60,6 +71,17 @@
 <script src="scripts/popup.js"></script>
 <script src="scripts/bootstrap.min.js"></script>
 <style>
+/*
+  ul li { list-style-type: none;
+        list-style-position:inside;
+        margin:0;
+        padding:0; }
+*/
+    li{
+        margin:0px 0px 0px -18px;
+        padding: 0px;
+    }  
+  
   tr.spaceUnder > td
   {
     padding-bottom: 1em;
