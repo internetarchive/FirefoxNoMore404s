@@ -23,7 +23,7 @@ function isValidUrl(url) {
 /**
  * Header callback
  */
-chrome.webRequest.onCompleted.addListener(function(details) {
+browser.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
     var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
                          509, 520, 521, 523, 524, 525, 526];
@@ -32,10 +32,10 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         httpFailCodes.indexOf(details.statusCode) >= 0 &&
         isValidUrl(details.url)) {
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
-        chrome.tabs.executeScript(details.tabId, {
+        browser.tabs.executeScript(details.tabId, {
           file: "scripts/client.js"
         }, function() {
-          chrome.tabs.sendMessage(details.tabId, {
+          browser.tabs.sendMessage(details.tabId, {
             type: "SHOW_BANNER",
             wayback_url: wayback_url
           });
@@ -45,7 +45,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
       });
     }
   }
-  chrome.tabs.get(details.tabId, function(tab) {
+  browser.tabs.get(details.tabId, function(tab) {
     tabIsReady(tab.incognito);
   });
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
@@ -78,6 +78,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
  * @return {string or null}
  */
 function getWaybackUrlFromResponse(response) {
+    
   if (response.results &&
       response.results[0] &&
       response.results[0].archived_snapshots &&
@@ -107,7 +108,7 @@ function isValidSnapshotUrl(url) {
 }
 
 
-chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
+browser.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
     
       
@@ -119,30 +120,30 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       console.log(open_url);
       if (message.method!='save') {
         wmAvailabilityCheck(url,function(){
-          chrome.tabs.create({ url:  open_url});
+          browser.tabs.create({ url:  open_url});
         },function(){
-          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
+          browser.runtime.sendMessage({message:'urlnotfound'},function(response){
           });
         })
       } else {
-        chrome.tabs.create({ url:  open_url});
+        browser.tabs.create({ url:  open_url});
       }
     
   }
 });
 
-chrome.webRequest.onErrorOccurred.addListener(function(details) {
+browser.webRequest.onErrorOccurred.addListener(function(details) {
   function tabIsReady(isIncognito) {
     if(details.error == 'NS_ERROR_NET_ON_CONNECTING_TO'  || details.error == 'NS_ERROR_NET_ON_RESOLVED'){
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
-        chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?url="+wayback_url});
+        browser.tabs.update(details.tabId, {url: browser.extension.getURL('dnserror.html')+"?url="+wayback_url});
       }, function() {
         
       });
     }
   }
   if(details.tabId >0 ){
-    chrome.tabs.get(details.tabId, function(tab) {
+    browser.tabs.get(details.tabId, function(tab) {
       tabIsReady(tab.incognito);
     });  
   }
@@ -150,4 +151,39 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
   
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
+ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){    
+    browser.tabs.query({active: true, currentWindow: true}, function(tabs){
+        if (changeInfo.status == "complete") {
+            browser.tabs.get(tabId, function(tab) {
+                var page_url = tab.url;
+                if(isValidUrl(page_url)){
+                    browser.browserAction.setBadgeBackgroundColor({tabId: tabId, color:[0,0, 255, 1]});
+                    browser.browserAction.setBadgeText({tabId: tabId, text:"Checking..."});            // checking the archives
+                    wmAvailabilityCheck(page_url,function(){
+                        browser.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[0, 255, 0, 1]});
+                        browser.browserAction.setBadgeText({tabId: tab.id, text:"YES"});  // webpage is archived
+                    },function(){
+                        browser.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[255, 0, 0, 1]});
+                        browser.browserAction.setBadgeText({tabId: tab.id, text:"NO"});                 // webpage not archived
+                        browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                            var tab = tabs[0];
+                            var page_url = tab.url;
+                            var wb_url = "https://web.archive.org/save/";
+                            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
+                            url = page_url.replace(pattern, "");
+                            open_url = wb_url+encodeURI(url);
+                            var xhr=new XMLHttpRequest();
+                            xhr.open('GET',open_url,true);
+                            xhr.onload=function(){
+                                browser.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[0, 255, 255, 1]});                 
+                                browser.browserAction.setBadgeText({tabId: tab.id, text:"SAVED"});
+                            };
+                            xhr.send();
+                        });
+                    });
+                }
+            });
+        }
+    });
+ });
 
