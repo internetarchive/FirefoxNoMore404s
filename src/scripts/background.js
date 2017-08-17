@@ -5,6 +5,8 @@
 var VERSION = "1.8.1";
 
 var excluded_urls = [
+  
+  "www.google.co",
   "web.archive.org/web/",
   "localhost",
   "0.0.0.0",
@@ -23,7 +25,7 @@ function isValidUrl(url) {
 /**
  * Header callback
  */
-browser.webRequest.onCompleted.addListener(function(details) {
+chrome.webRequest.onCompleted.addListener(function(details) {
   function tabIsReady(isIncognito) {
     var httpFailCodes = [404, 408, 410, 451, 500, 502, 503, 504,
                          509, 520, 521, 523, 524, 525, 526];
@@ -32,10 +34,10 @@ browser.webRequest.onCompleted.addListener(function(details) {
         httpFailCodes.indexOf(details.statusCode) >= 0 &&
         isValidUrl(details.url)) {
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
-        browser.tabs.executeScript(details.tabId, {
+        chrome.tabs.executeScript(details.tabId, {
           file: "scripts/client.js"
         }, function() {
-          browser.tabs.sendMessage(details.tabId, {
+          chrome.tabs.sendMessage(details.tabId, {
             type: "SHOW_BANNER",
             wayback_url: wayback_url
           });
@@ -45,7 +47,7 @@ browser.webRequest.onCompleted.addListener(function(details) {
       });
     }
   }
-  browser.tabs.get(details.tabId, function(tab) {
+  chrome.tabs.get(details.tabId, function(tab) {
     tabIsReady(tab.incognito);
   });
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
@@ -108,7 +110,7 @@ function isValidSnapshotUrl(url) {
 }
 
 
-browser.runtime.onMessage.addListener(function(message,sender,sendResponse){
+chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='openurl'){
     
       
@@ -120,30 +122,30 @@ browser.runtime.onMessage.addListener(function(message,sender,sendResponse){
       console.log(open_url);
       if (message.method!='save') {
         wmAvailabilityCheck(url,function(){
-          browser.tabs.create({ url:  open_url});
+          chrome.tabs.create({ url:  open_url});
         },function(){
-          browser.runtime.sendMessage({message:'urlnotfound'},function(response){
+          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
           });
         })
       } else {
-        browser.tabs.create({ url:  open_url});
+        chrome.tabs.create({ url:  open_url});
       }
     
   }
 });
 
-browser.webRequest.onErrorOccurred.addListener(function(details) {
+chrome.webRequest.onErrorOccurred.addListener(function(details) {
   function tabIsReady(isIncognito) {
     if(details.error == 'NS_ERROR_NET_ON_CONNECTING_TO'  || details.error == 'NS_ERROR_NET_ON_RESOLVED'){
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
-        browser.tabs.update(details.tabId, {url: browser.extension.getURL('dnserror.html')+"?url="+wayback_url});
+        chrome.tabs.update(details.tabId, {url: chrome.extension.getURL('dnserror.html')+"?url="+wayback_url});
       }, function() {
         
       });
     }
   }
   if(details.tabId >0 ){
-    browser.tabs.get(details.tabId, function(tab) {
+    chrome.tabs.get(details.tabId, function(tab) {
       tabIsReady(tab.incognito);
     });  
   }
@@ -151,21 +153,26 @@ browser.webRequest.onErrorOccurred.addListener(function(details) {
   
 }, {urls: ["<all_urls>"], types: ["main_frame"]});
 
- browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){    
-    browser.tabs.query({active: true, currentWindow: true}, function(tabs){
+
+ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){    
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+        chrome.browserAction.setBadgeBackgroundColor({color:"",tabId: tabId});
+        chrome.browserAction.setBadgeText({tabId: tab.id, text:""});
         if (changeInfo.status == "complete") {
-            browser.tabs.get(tabId, function(tab) {
+            chrome.tabs.get(tabId, function(tab) {
                 var page_url = tab.url;
                 if(isValidUrl(page_url)){
-                    browser.browserAction.setBadgeBackgroundColor({tabId: tabId, color:[0,0, 255, 1]});
-                    browser.browserAction.setBadgeText({tabId: tabId, text:"Checking..."});            // checking the archives
+                    //chrome.browserAction.setBadgeBackgroundColor({color:"yellow",tabId: tabId});
+                    //chrome.browserAction.setBadgeText({tabId: tabId, text:"Checking..."});            // checking the archives
+
                     wmAvailabilityCheck(page_url,function(){
-                        browser.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[0, 255, 0, 1]});
-                        browser.browserAction.setBadgeText({tabId: tab.id, text:"YES"});  // webpage is archived
+                        chrome.browserAction.setBadgeBackgroundColor({color:"green",tabId: tabId});
+                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"YES"});  // webpage is archived
+
                     },function(){
-                        browser.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[255, 0, 0, 1]});
-                        browser.browserAction.setBadgeText({tabId: tab.id, text:"NO"});                 // webpage not archived
-                        browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                        chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
+                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"NO"});                 // webpage not archived
+                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                             var tab = tabs[0];
                             var page_url = tab.url;
                             var wb_url = "https://web.archive.org/save/";
@@ -175,8 +182,9 @@ browser.webRequest.onErrorOccurred.addListener(function(details) {
                             var xhr=new XMLHttpRequest();
                             xhr.open('GET',open_url,true);
                             xhr.onload=function(){
-                                browser.browserAction.setBadgeBackgroundColor({tabId: tab.id, color:[0, 255, 255, 1]});                 
-                                browser.browserAction.setBadgeText({tabId: tab.id, text:"SAVED"});
+                                chrome.browserAction.setBadgeBackgroundColor({color:"blue", tabId: tabId});
+                                chrome.browserAction.setBadgeText({tabId: tab.id,text:"SAVED"});
+
                             };
                             xhr.send();
                         });

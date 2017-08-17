@@ -107,10 +107,21 @@ function first_capture_function(){
 }
 
 function view_all_function(){
-	var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-	url = document.location.href.replace(pattern, "");
-	open_url = "https://web.archive.org/web/*/"+encodeURI(url);
-	document.location.href = open_url;
+    if(search_term()==""){
+        var url=global_url;
+    }else{
+        var url=search_term();
+    }
+    if(wbm_url(url)){
+        url=remove_wbm(url);
+    }else if(alexa_url(url)){
+        url=remove_alexa(url);
+    }else if(whois_url(url)){
+        url=remove_whois(url);
+    }
+	var wb_url = "https://web.archive.org/web/*/";
+	chrome.runtime.sendMessage({message: "openurl", wayback_url: wb_url,page_url:url, method:'viewall' }, function(response) {
+	});
 }
 
 function get_url(){
@@ -267,12 +278,23 @@ function display_suggestions(e){
     }
         
     },0.1);
-//    }else{
-//        document.getElementById('suggestion-box').style.display='none';
-//        document.getElementById('suggestion-box').innerHTML="";
-//    }
+
 }
 
+function about_support(){
+  var myWindow = window.open("", "", "width=500, height=400");   // Opens a new window
+  myWindow.document.write("<p>Description about the Extension will go here</p>");         // Some text in the new window
+  myWindow.focus();        
+}
+
+function support_function(){
+  var final_support = "mailto:info@archive.org";
+  //window.open(final_support, "", "width=500, height=400");
+    //chrome.tabs.create({url:final_support});
+    var myWindow = window.open("", "", "width=500, height=400");   // Opens a new window
+  myWindow.document.write("<p>mailto:info@archive.org</p>");         // Some text in the new window
+  //myWindow.focus();
+}
 
 window.onload=get_url;
 document.getElementById('save_now').onclick = save_now_function;
@@ -285,6 +307,9 @@ document.getElementById('linkedin_share').onclick =social_share;
 document.getElementById('alexa_statistics').onclick =alexa_statistics_function;
 document.getElementById('whois_statistics').onclick =whois_statistics_function;
 document.getElementById('search_tweet').onclick =search_tweet_function;
+document.getElementById('about_support_button').onclick = about_support;
+document.getElementById('support_button').onclick = support_function;
+document.getElementById('overview').onclick = view_all_function;
 document.getElementById('search_input').addEventListener('keydown',display_suggestions);
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='urlnotfound'){
