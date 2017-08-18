@@ -167,11 +167,12 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 
                     wmAvailabilityCheck(page_url,function(){
                         chrome.browserAction.setBadgeBackgroundColor({color:"green",tabId: tabId});
-                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"YES"});  // webpage is archived
-
+                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"yes"});  // webpage is archived
+                        console.error(page_url+'is already saved');
                     },function(){
                         chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"NO"});                 // webpage not archived
+                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"no"});                 // webpage not archived
+                        console.error(page_url+'is not already saved');
                         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                             var tab = tabs[0];
                             var page_url = tab.url;
@@ -182,9 +183,19 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
                             var xhr=new XMLHttpRequest();
                             xhr.open('GET',open_url,true);
                             xhr.onload=function(){
-                                chrome.browserAction.setBadgeBackgroundColor({color:"blue", tabId: tabId});
-                                chrome.browserAction.setBadgeText({tabId: tab.id,text:"SAVED"});
-
+                                if(xhr.status==200){
+                                    chrome.browserAction.setBadgeBackgroundColor({color:"blue", tabId: tabId});
+                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"saved"});
+                                    console.error(page_url+'is saved now');
+                                }else if(xhr.status==403){
+                                    chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
+                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"failed"});
+                                    console.error(page_url+' save is forbidden');
+                                }else{
+                                    chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
+                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"failed"});
+                                    console.error(page_url+' error unknown');
+                                }
                             };
                             xhr.send();
                         });
