@@ -115,10 +115,10 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     
       
       var page_url = message.page_url;
-      wayback_url = message.wayback_url;
+      var wayback_url = message.wayback_url;
       var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-      url = page_url.replace(pattern, "");
-      open_url = wayback_url+encodeURI(url);
+      var url = page_url.replace(pattern, "");
+      var open_url = wayback_url+encodeURI(url);
       console.log(open_url);
       if (message.method!='save') {
         wmAvailabilityCheck(url,function(){
