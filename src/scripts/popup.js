@@ -296,7 +296,57 @@ function support_function(){
   //myWindow.focus();
 }
 
+
+function restoreSettings() {
+  //count=0;
+  chrome.storage.sync.get({
+    
+    as:true
+  }, function(items) {
+    
+    document.getElementById('as').checked = items.as;  
+      if(items.as){
+          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
+      }
+     });
+}
+
+function saveSettings(){
+    var as = document.getElementById('as').checked;
+    
+//    if(as){
+//        chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
+//    }
+
+    chrome.storage.sync.set({
+    
+    as: as
+  });
+}
+
+function makeModal(){
+    chrome.runtime.sendMessage({message: "makemodal"}, function(response) {
+	});
+    
+}
+
+function showSettings(eventObj){
+    var target=eventObj.target;
+    if(target.getAttribute('toggle')=='off'){
+        document.getElementById('settings_btn').setAttribute('toggle','on');
+    document.getElementById('settings_div').style.display="block";
+    }else{
+        document.getElementById('settings_btn').setAttribute('toggle','off');
+        document.getElementById('settings_div').style.display="none";
+    }
+    
+}
+
 window.onload=get_url;
+restoreSettings();
+
+document.getElementById('settings_div').style.display="none";
+
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
 document.getElementById('first_capture').onclick = first_capture_function;
@@ -310,6 +360,9 @@ document.getElementById('search_tweet').onclick =search_tweet_function;
 document.getElementById('about_support_button').onclick = about_support;
 document.getElementById('support_button').onclick = support_function;
 document.getElementById('overview').onclick = view_all_function;
+document.getElementById('settings_btn').onclick=showSettings;
+document.getElementById('settings_save_btn').onclick=saveSettings;
+document.getElementById('make_modal').onclick=makeModal;
 document.getElementById('search_input').addEventListener('keydown',display_suggestions);
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   if(message.message=='urlnotfound'){

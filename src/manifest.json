@@ -18,6 +18,7 @@
       "notifications",
     "tabs",
         "activeTab",
+      "storage",
         "webRequest",
         "webRequestBlocking",
         "http://*/*",
@@ -34,7 +35,13 @@
     "images/insetIcon.svg",
     "images/close.svg",
     "images/logo.gif",
-    "scripts/client.js"
+    "scripts/client.js",
+      "scripts/RTcontent.js",
+"scripts/sequences.js",
+"scripts/d3.js",
+"css/RTstyle.css",
+"css/sequences.css",
+      "css/googlestyle.css"
   ],
   "browser_action": {
     "default_icon": "images/icon.png",
