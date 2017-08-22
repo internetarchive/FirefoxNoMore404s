@@ -283,7 +283,7 @@ function display_suggestions(e){
 
 function about_support(){
   var myWindow = window.open("", "", "width=500, height=400");   // Opens a new window
-  myWindow.document.write("<p>Description about the Extension will go here</p>");         // Some text in the new window
+  myWindow.document.write("<p>Description about the Extension will go here</p><br><p>Contact us at info@archive.org</>");         // Some text in the new window
   myWindow.focus();        
 }
 
@@ -358,7 +358,7 @@ document.getElementById('alexa_statistics').onclick =alexa_statistics_function;
 document.getElementById('whois_statistics').onclick =whois_statistics_function;
 document.getElementById('search_tweet').onclick =search_tweet_function;
 document.getElementById('about_support_button').onclick = about_support;
-document.getElementById('support_button').onclick = support_function;
+//document.getElementById('support_button').onclick = support_function;
 document.getElementById('overview').onclick = view_all_function;
 document.getElementById('settings_btn').onclick=showSettings;
 document.getElementById('settings_save_btn').onclick=saveSettings;

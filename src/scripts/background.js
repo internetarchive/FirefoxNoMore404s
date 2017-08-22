@@ -220,16 +220,16 @@ function auto_save(tabId){
                                     console.error(page_url+'is saved now');
                                 }else if(xhr.status==403){
                                     chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u2613"});
+                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u26d4"});
                                     console.error(page_url+' save is forbidden');
                                 }else if(xhr.status==503){
                                     chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u2613"});
-                                    console.error(page_url+' error unknown');
+                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u26d4"});
+                                    console.error(page_url+' service unavailable');
                                 }else if(xhr.status==504){
                                     chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u2613"});
-                                    console.error(page_url+' error unknown');
+                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u26d4"});
+                                    console.error(page_url+' gateway timeout');
                                 }
                             };
                             xhr.send();
