@@ -1,5 +1,5 @@
 global_url="";
-count=0;
+
 function wbm_url(url){
     if(url.includes('web.archive.org')){
         return true;
@@ -17,7 +17,12 @@ function remove_port(url){
 
 function remove_wbm(url){
     var pos=url.indexOf('/http');
-    var new_url=url.substring(pos+1);
+    if(pos!=-1){
+        var new_url=url.substring(pos+1);
+    }else{
+        var pos=url.indexOf('/www');
+        var new_url=url.substring(pos+1);
+    }
     new_url=remove_port(new_url);
     return new_url;
 }
@@ -180,7 +185,7 @@ function alexa_statistics_function(eventObj){
         url=remove_whois(url);
     }
     var open_url="http://www.alexa.com/siteinfo/"+url;
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function whois_statistics_function(eventObj){
@@ -197,7 +202,7 @@ function whois_statistics_function(eventObj){
         url=remove_whois(url);
     }
     var open_url="https://www.whois.com/whois/"+url;
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');
+    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');
 }
 
 function search_tweet_function(eventObj){
@@ -220,7 +225,7 @@ function search_tweet_function(eventObj){
     }
     if(url.slice(-1)=='/') url=url.substring(0,url.length-1);
     var open_url="https://twitter.com/search?q="+url;
-    window.open(open_url, 'newwindow', 'width=800, height=280,left=0');    
+    window.open(open_url, 'newwindow', 'width=1000, height=1000,left=0');    
 }
 
 function display_list(key_word){
@@ -258,8 +263,8 @@ function display_list(key_word){
 }
 
 function display_suggestions(e){
-    count++;
-    //console.log(count);
+    
+    
     document.getElementById('suggestion-box').style.display='none';
     document.getElementById('suggestion-box').innerHTML="";
     
@@ -282,70 +287,72 @@ function display_suggestions(e){
 }
 
 function about_support(){
-  var myWindow = window.open("", "", "width=500, height=400");   // Opens a new window
-  myWindow.document.write("<p>Description about the Extension will go here</p><br><p>Contact us at info@archive.org</>");         // Some text in the new window
+  var myWindow = window.open("about.html", "", "width=1000, height=1000");
+
+
   myWindow.focus();        
 }
 
-function support_function(){
-  var final_support = "mailto:info@archive.org";
-  //window.open(final_support, "", "width=500, height=400");
-    //chrome.tabs.create({url:final_support});
-    var myWindow = window.open("", "", "width=500, height=400");   // Opens a new window
-  myWindow.document.write("<p>mailto:info@archive.org</p>");         // Some text in the new window
-  //myWindow.focus();
-}
 
 
-function restoreSettings() {
-  //count=0;
-  chrome.storage.sync.get({
-    
-    as:true
-  }, function(items) {
-    
-    document.getElementById('as').checked = items.as;  
-      if(items.as){
-          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
-      }
-     });
-}
 
-function saveSettings(){
-    var as = document.getElementById('as').checked;
-    
-//    if(as){
-//        chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
-//    }
-
-    chrome.storage.sync.set({
-    
-    as: as
-  });
-}
+//function restoreSettings() {
+//  
+//  chrome.storage.sync.get({
+//    
+//    as:false
+//  }, function(items) {
+//    
+//    document.getElementById('as').checked = items.as;  
+//      if(items.as){
+//          chrome.runtime.sendMessage({message: "start_as"}, function(response) {});
+//      }
+//     });
+//}
+//
+//function saveSettings(){
+//    var as = document.getElementById('as').checked;
+//      chrome.storage.sync.set({
+//      as: as
+//  });
+//}
 
 function makeModal(){
-    chrome.runtime.sendMessage({message: "makemodal"}, function(response) {
+    if(search_term()==""){
+        var url=global_url;
+    }else{
+        var url=search_term();
+        //var url=global_url;
+    }
+    if(wbm_url(url)){
+        url=remove_wbm(url);
+    }else if(alexa_url(url)){
+        url=remove_alexa(url);
+    }else if(whois_url(url)){
+        url=remove_whois(url);
+    }
+    console.log("Making RT for "+url);
+    chrome.runtime.sendMessage({message: "makemodal",rturl:url}, function(response) {
 	});
     
 }
 
-function showSettings(eventObj){
-    var target=eventObj.target;
-    if(target.getAttribute('toggle')=='off'){
-        document.getElementById('settings_btn').setAttribute('toggle','on');
-    document.getElementById('settings_div').style.display="block";
-    }else{
-        document.getElementById('settings_btn').setAttribute('toggle','off');
-        document.getElementById('settings_div').style.display="none";
-    }
-    
-}
+//function showSettings(eventObj){
+//    var target=eventObj.target;
+//    if(target.getAttribute('toggle')=='off'){
+//        document.getElementById('settings_btn').setAttribute('toggle','on');
+//    document.getElementById('settings_div').style.display="block";
+//    }else{
+//        document.getElementById('settings_btn').setAttribute('toggle','off');
+//        document.getElementById('settings_div').style.display="none";
+//    }
+//    
+//}
 
 window.onload=get_url;
-restoreSettings();
+//restoreSettings();
 
-document.getElementById('settings_div').style.display="none";
+//document.getElementById('settings_div').style.display="none";
 
 document.getElementById('save_now').onclick = save_now_function;
 document.getElementById('recent_capture').onclick = recent_capture_function;
@@ -358,10 +365,10 @@ document.getElementById('alexa_statistics').onclick =alexa_statistics_function;
 document.getElementById('whois_statistics').onclick =whois_statistics_function;
 document.getElementById('search_tweet').onclick =search_tweet_function;
 document.getElementById('about_support_button').onclick = about_support;
-//document.getElementById('support_button').onclick = support_function;
+
 document.getElementById('overview').onclick = view_all_function;
-document.getElementById('settings_btn').onclick=showSettings;
-document.getElementById('settings_save_btn').onclick=saveSettings;
+//document.getElementById('settings_btn').onclick=showSettings;
+//document.getElementById('settings_save_btn').onclick=saveSettings;
 document.getElementById('make_modal').onclick=makeModal;
 document.getElementById('search_input').addEventListener('keydown',display_suggestions);
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){

@@ -2,7 +2,7 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-var VERSION = "1.8.1";
+var VERSION = "1.8.2";
 
 var excluded_urls = [
   
@@ -12,7 +12,8 @@ var excluded_urls = [
   "0.0.0.0",
   "127.0.0.1"
 ];
-
+RTurl="";
+Globalstatuscode="";
 function isValidUrl(url) {
   for (var i = 0; i < excluded_urls.length; i++) {
     if (url.startsWith("http://" + excluded_urls[i]) || url.startsWith("https://" + excluded_urls[i])) {
@@ -33,6 +34,7 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         details.frameId === 0 &&
         httpFailCodes.indexOf(details.statusCode) >= 0 &&
         isValidUrl(details.url)) {
+        Globalstatuscode=details.statusCode;
       wmAvailabilityCheck(details.url, function(wayback_url, url) {
         chrome.tabs.executeScript(details.tabId, {
           file: "scripts/client.js"
@@ -61,7 +63,7 @@ function wmAvailabilityCheck(url, onsuccess, onfail) {
   var requestParams = "url=" + encodeURI(url);
   xhr.open("POST", requestUrl, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/" + VERSION);
+  xhr.setRequestHeader("User-Agent", navigator.userAgent + " Wayback_Machine_Firefox/" + VERSION+" Status-code/" + Globalstatuscode);
   xhr.setRequestHeader("Wayback-Api-Version", 2);
   xhr.onload = function() {
     var response = JSON.parse(xhr.responseText);
@@ -132,10 +134,11 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       }
     
   }else if(message.message=='makemodal'){
-            
+            RTurl=message.rturl;
+            console.log(RTurl);
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var tab=tabs[0];
-                var url=tabs[0].url;
+                var url=RTurl;
                 if(url.includes('web.archive.org') || url.includes('web-beta.archive.org')){
                     //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
                     alert("Structure as radial tree not available on archive.org pages");
@@ -159,6 +162,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 var url=tabs[0].url;
                 chrome.tabs.sendMessage(tabs[0].id, {url:url});
+            });
+        }else if(message.message=='sendurlforrt'){
+            console.log(RTurl);
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                //var url=tabs[0].url;
+                console.log(RTurl);
+                chrome.tabs.sendMessage(tabs[0].id, {RTurl:RTurl});
+                console.log(RTurl);
             });
         }
 });
@@ -187,8 +198,8 @@ function auto_save(tabId){
             chrome.tabs.get(tabId, function(tab) {
                 var page_url = tab.url;
                 if(isValidUrl(page_url)){
-                    //chrome.browserAction.setBadgeBackgroundColor({color:"yellow",tabId: tabId});
-                    //chrome.browserAction.setBadgeText({tabId: tabId, text:"Checking..."});            // checking the archives
+                    chrome.browserAction.setBadgeBackgroundColor({color:"yellow",tabId: tabId});
+                    chrome.browserAction.setBadgeText({tabId: tabId, text:"..."});            // checking the archives
 
                     wmAvailabilityCheck(page_url,function(){
                         chrome.browserAction.setBadgeBackgroundColor({color:"green",tabId: tabId});
@@ -209,7 +220,7 @@ function auto_save(tabId){
                             xhr.open('GET',open_url,true);
                             xhr.onerror=function(){
                                 chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u2613"});
+                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u26d4"});
                                     console.error(page_url+' error unknown');
                             };
                             xhr.onload=function(){
@@ -240,8 +251,8 @@ function auto_save(tabId){
 }
  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){    
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-        chrome.browserAction.setBadgeBackgroundColor({color:"yellow",tabId: tabId});
-        chrome.browserAction.setBadgeText({tabId: tabId, text:"..."});
+        //chrome.browserAction.setBadgeBackgroundColor({color:"yellow",tabId: tabId});
+        //chrome.browserAction.setBadgeText({tabId: tabId, text:"..."});
                   if (changeInfo.status == "complete" && !(tab.url.startsWith("http://web.archive.org/web") || tab.url.startsWith("https://web.archive.org/web") || tab.url.startsWith("https://web-beta.archive.org/web") || tab.url.startsWith("file:///") )) {
               chrome.storage.sync.get(['as'], function(items) {
                 
@@ -251,54 +262,10 @@ function auto_save(tabId){
             });
             
           }else{
-                    //chrome.browserAction.setBadgeBackgroundColor({color:"",tabId: tabId});
+                
                     chrome.browserAction.setBadgeText({tabId: tabId, text:""});
           }
-//        if (changeInfo.status == "complete") {
-//            chrome.tabs.get(tabId, function(tab) {
-//                var page_url = tab.url;
-//                if(isValidUrl(page_url)){
-//                    //chrome.browserAction.setBadgeBackgroundColor({color:"yellow",tabId: tabId});
-//                    //chrome.browserAction.setBadgeText({tabId: tabId, text:"Checking..."});            // checking the archives
-//
-//                    wmAvailabilityCheck(page_url,function(){
-//                        chrome.browserAction.setBadgeBackgroundColor({color:"green",tabId: tabId});
-//                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"\u2713"});  // webpage is archived
-//                        console.error(page_url+'is already saved');
-//                    },function(){
-//                        chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-//                        chrome.browserAction.setBadgeText({tabId: tab.id, text:"\u2613"});                 // webpage not archived
-//                        console.error(page_url+'is not already saved');
-//                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//                            var tab = tabs[0];
-//                            var page_url = tab.url;
-//                            var wb_url = "https://web.archive.org/save/";
-//                            var pattern = /https:\/\/web\.archive\.org\/web\/(.+?)\//g;
-//                            url = page_url.replace(pattern, "");
-//                            open_url = wb_url+encodeURI(url);
-//                            var xhr=new XMLHttpRequest();
-//                            xhr.open('GET',open_url,true);
-//                            xhr.onload=function(){
-//                                if(xhr.status==200){
-//                                    chrome.browserAction.setBadgeBackgroundColor({color:"blue", tabId: tabId});
-//                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u2713"});
-//                                    console.error(page_url+'is saved now');
-//                                }else if(xhr.status==403){
-//                                    chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-//                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u2613"});
-//                                    console.error(page_url+' save is forbidden');
-//                                }else{
-//                                    chrome.browserAction.setBadgeBackgroundColor({color:"red", tabId: tabId});
-//                                    chrome.browserAction.setBadgeText({tabId: tab.id,text:"\u2613"});
-//                                    console.error(page_url+' error unknown');
-//                                }
-//                            };
-//                            xhr.send();
-//                        });
-//                    });
-//                }
-//            });
-//        }
+
     });
  });
 

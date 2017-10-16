@@ -1,10 +1,22 @@
-console.log('Sequences running');
-IAglobvar=0;
-//console.log('sequences');
-chrome.runtime.sendMessage({message:'sendurl'});
+
+
+
+GlobYear=0;
+if(document.getElementById('myModal').getAttribute('count')==1){
+    var animate=document.createElement('img');
+var fullURL=chrome.runtime.getURL('images/logo-animate.svg');
+animate.setAttribute('src',fullURL);
+animate.setAttribute('id','animated-logo');
+document.getElementById('chart').appendChild(animate);
+}
+
+
+chrome.runtime.sendMessage({message:'sendurlforrt'});
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
-  if(message.url){
-    var url=message.url;
+  if(message.RTurl!=""){
+    
+    var url=message.RTurl;
+    
     if(url.includes('https')){
       url=url.replace('https://','');
     }else{
@@ -12,8 +24,8 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     }
     
     var pos=url.indexOf('/');
-    url=url.substring(0,pos);
-    console.log('THE URL is '+url);
+    if(pos!=-1) url=url.substring(0,pos);
+    
     var xhr = new XMLHttpRequest();
     xhr.open("GET","https://web.archive.org/cdx/search/cdx?url="+url+"/&fl=timestamp,original&matchType=prefix&filter=statuscode:200&filter=mimetype:text/html&output=json", true);     
     
@@ -24,7 +36,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       var j=0;
       for(var i=1;i<response.length;i++){
         var url=response[i][1].toLowerCase();
-        if(url.includes('jpg') || url.includes('pdf') || url.includes('png') || url.includes('form') || url.includes('gif')){
+        if(url.match(/jpg|pdf|png|form|gif/)) {
           continue;
         }
         if(url.startsWith('https')){
@@ -33,16 +45,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         if(response[i][1].indexOf(':80')>(-1)){
           url=response[i][1].replace(':80','');
         }
-        
-        if(url.includes('www1')){
-          url=url.replace('www1','www');
-        }else if(url.includes('www2')){
-          url=url.replace('www2','www');
-        }else if(url.includes('www3')){
-          url=url.replace('www3','www');
-        }else if(url.includes('www0')){
-            url=url.replace('www0','www');
-        }
+        url = url.replace(/www0|www1|www2|www3/gi, 'www');
         if(url.indexOf('://www')==(-1)){
           
           url="http://www."+url.substring(7);
@@ -156,7 +159,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           if(url.includes('//')){
             url=url.split('//').join('/');
           }
-          url=url.split('/').join('>');
+          url=url.split('/').join('/');
           years[i][j]=url;
         }
       }
@@ -168,6 +171,10 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
       }
       //console.log(years);
       //console.log(all_years);
+      if(document.getElementById('myModal').getAttribute('count')==1){
+        var animateSvg=document.getElementById('animated-logo');
+        document.getElementById('chart').removeChild(animateSvg);    
+      }
       
       function make_new_text(n){
         var text="";
@@ -180,9 +187,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         for(var i=x;i<years[n].length;i++){
           
           if(i!=(years[n].length-1)){
-            text=text+years[n][i]+">end,1"+"\n";
+            text=text+years[n][i]+" ,1"+"\n";
           }else{
-            text=text+years[n][i]+">end,1";
+            text=text+years[n][i]+" ,1";
           }
         }
         return text;
@@ -211,7 +218,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           document.getElementsByClassName('activebtn')[0].classList.remove('activebtn') ;
         }
         target.classList.add('activebtn');
-        IAglobvar=target.id;
+        GlobYear=target.id;
         var num=all_years.indexOf(target.id) ;
         //console.log(num);
         var text=make_new_text(num);
@@ -223,14 +230,14 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         var actId=document.getElementsByClassName('activebtn')[0].id;
         var index=all_years.indexOf(actId);
-        IAglobvar=actId;
+        GlobYear=actId;
         var text=make_new_text(index);
         make_chart(text);
         
         
       }else{
         btns[0].classList.add('activebtn');
-        IAglobvar= document.getElementsByClassName('activebtn')[0].id;
+        GlobYear= document.getElementsByClassName('activebtn')[0].id;
         var text=make_new_text(0);
         make_chart(text);
       }
@@ -240,6 +247,10 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         document.getElementById('sequence').innerHTML="";
         document.getElementById('chart').innerHTML="";
         document.getElementById('message').innerHTML="";
+//        var animate=document.createElement('img');
+//        var fullURL=chrome.runtime.getURL('images/logo-animate.svg');
+//        animate.setAttribute('src',fullURL);
+//        document.getElementById('chart').appendChild(animate);
         var width = window.innerWidth-150;
         var height = window.innerHeight-150;
         var radius = Math.min(width, height) / 2;
@@ -282,9 +293,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         var csv = d3.csvParseRows(text);
         var json = buildHierarchy(csv);
-        console.log(json);
+        //console.log(json);
         createVisualization(json);
-        
+        //document.getElementById('chart').removeChild(animate);
         
         // Main function to draw and set up the visualization, once we have the data.
         function createVisualization(json) {
@@ -322,6 +333,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             
           })
           .style("opacity", 1)
+          .style("cursor",'pointer')
           .on("mouseover", mouseover)
           .on("click",openTheUrl);
           // Add the mouseleave handler to the bounding circle.
@@ -333,7 +345,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         
         function openTheUrl(d){
-          var year=IAglobvar;
+          var year=GlobYear;
           var anc=d.ancestors().reverse();
           var url="";
           for(var i=1;i<anc.length;i++){
@@ -344,7 +356,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
             
             
           }
-          var wb_url="https://web.archive.org/web/"+year+"*";
+          var wb_url="https://web.archive.org/web/"+year+"0630";
           //console.log(url);
           
           //chrome.runtime.sendMessage({message:'openurl',url:wayback_url});
@@ -353,7 +365,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
         // Fade all but the current sequence, and show it in the breadcrumb trail.
         function mouseover(d) {
-          
+        
           var percentage = (100 * d.value / totalSize).toPrecision(3);
           var percentageString = percentage + "%";
           if (percentage < 0.1) {
@@ -432,7 +444,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         var text="";
         var symb=document.createElement('span');
         symb.setAttribute('class','symb');
-        symb.innerHTML=">";
+        symb.innerHTML="/";
         for(var i=0;i<anc_arr.length;i++){
           if(i==0){
             text=" "+anc_arr[i].data.name;
@@ -448,47 +460,9 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         
       }
       
-      function drawLegend() {
-        
-        // Dimensions of legend item: width, height, spacing, radius of rounded rect.
-        var li = {
-          w: 75, h: 30, s: 3, r: 3
-        };
-        
-        var legend = d3.select("#legend").append("svg:svg")
-        .attr("width", li.w)
-        .attr("height", d3.keys(colors).length * (li.h + li.s));
-        
-        var g = legend.selectAll("g")
-        .data(d3.entries(colors))
-        .enter().append("svg:g")
-        .attr("transform", function(d, i) {
-          return "translate(0," + i * (li.h + li.s) + ")";
-        });
-        
-        g.append("svg:rect")
-        .attr("rx", li.r)
-        .attr("ry", li.r)
-        .attr("width", li.w)
-        .attr("height", li.h)
-        .style("fill", function(d) { return d.value; });
-        
-        g.append("svg:text")
-        .attr("x", li.w / 2)
-        .attr("y", li.h / 2)
-        .attr("dy", "0.35em")
-        .attr("text-anchor", "middle")
-        .text(function(d) { return d.key; });
-      }
       
-      function toggleLegend() {
-        var legend = d3.select("#legend");
-        if (legend.style("visibility") == "hidden") {
-          legend.style("visibility", "");
-        } else {
-          legend.style("visibility", "hidden");
-        }
-      }
+      
+      
       
       // Take a 2-column CSV and transform it into a hierarchical structure suitable
       // for a partition layout. The first column is a sequence of step names, from
@@ -507,7 +481,7 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
           if (isNaN(size)) { // e.g. if this is a header row
             continue;
           }
-          var parts = sequence.split(">");
+          var parts = sequence.split("/");
           var currentNode = root;
           for (var j = 0; j < parts.length; j++) {
             var children = currentNode["children"];

@@ -1,6 +1,9 @@
-console.log('RT running');
+
 if(document.getElementById('myModal')!=null){
     document.getElementById('myModal').style.display="block";
+    var count=document.getElementById('myModal').getAttribute('count');
+    count++;
+    document.getElementById('myModal').setAttribute('count',count);
 }else{
 
 
@@ -23,7 +26,7 @@ document.head.appendChild(seq);
 var modal=document.createElement('div');
 modal.setAttribute('id','myModal');
 modal.setAttribute('class','RTmodal');
-
+modal.setAttribute('count','1');
 var modalContent=document.createElement('div');
 modalContent.setAttribute('class','modal-content');
 var span=document.createElement('button');
@@ -50,7 +53,7 @@ modal.appendChild(message);
 document.body.appendChild(modal);
 
 modal.style.display = "block";
-console.log('END of RT');    
+  
 
 
 span.onclick = function() {
