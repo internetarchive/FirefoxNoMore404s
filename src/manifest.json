@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Wayback Machine",
   "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
-  "version": "1.8.2",
+  "version": "1.8.5",
   "homepage_url": "https://archive.org/",
   "icons": {
     "48": "images/icon.png",
@@ -20,6 +20,7 @@
       "storage",
         "webRequest",
         "webRequestBlocking",
+      "contextMenus",
         "http://*/*",
         "https://*/*",
         "*://*/*",
@@ -39,7 +40,10 @@
 "scripts/d3.js",
 "css/RTstyle.css",
 "css/sequences.css",
-      "css/googlestyle.css"
+      "css/googlestyle.css",
+      "scripts/radial-tree.umd.js",
+      "css/radial-tree.css"
+      
   ],
   "browser_action": {
     "default_icon": "images/icon.png",
