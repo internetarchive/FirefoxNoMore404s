@@ -2,8 +2,8 @@
  * License: AGPL-3
  * Copyright 2016, Internet Archive
  */
-console.log("Running");
-var VERSION = "1.8.5";
+
+var VERSION = "1.8.6";
 badURL="";
 badId=-1;
 var excluded_urls = [
@@ -38,13 +38,20 @@ chrome.webRequest.onCompleted.addListener(function(details) {
         isValidUrl(badURL)) {
       wmAvailabilityCheck(badURL, function(wayback_url, url) {
         chrome.tabs.executeScript(badId, {
-          file: "scripts/client.js"
-        }, function() {
-          chrome.tabs.sendMessage(badId, {
-            type: "SHOW_BANNER",
-            wayback_url: wayback_url
-          });
-        });
+              file: "scripts/client.js"
+            }, function() {
+              if (chrome.runtime.lastError) {
+                var errorMsg = chrome.runtime.lastError.message
+                if (errorMsg.startsWith("Cannot access contents of url")) {
+                  chrome.tabs.update(badId, {url: chrome.extension.getURL('dnserror.html')+"?url="+wayback_url});
+                }
+              }else{
+                chrome.tabs.sendMessage(badId, {
+                  type: "SHOW_BANNER",
+                  wayback_url: wayback_url
+                });
+              }
+            });
       }, function() {
         
       });
@@ -128,13 +135,7 @@ function isValidSnapshotUrl(url) {
 }
 
 function URLopener(open_url,url){
-    wmAvailabilityCheck(url,function(){
-          chrome.tabs.create({ url:  open_url});
-        },function(){
-            alert("URL not found");
-//          chrome.runtime.sendMessage({message:'urlnotfound'},function(response){
-//          });
-        })
+    chrome.tabs.create({ url:  open_url});
 }
 
 
@@ -164,17 +165,20 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
                     //chrome.tabs.sendMessage(tab.id, {message:'nomodal'});
                     alert("Structure as radial tree not available on archive.org pages");
                 }else{
-                    chrome.tabs.executeScript(tab.id, {
-                  file:"scripts/d3.js"
+                chrome.tabs.executeScript(tab.id, {
+                    file:"scripts/lodash.min.js"
                 });
                 chrome.tabs.executeScript(tab.id, {
-                      file:"scripts/radial-tree.umd.js"
-                    });
-                chrome.tabs.executeScript(tab.id, {
-                  file:"scripts/RTcontent.js"
+                    file:"scripts/d3.js"
                 });
                 chrome.tabs.executeScript(tab.id, {
-                  file:"scripts/sequences.js"
+                    file:"scripts/radial-tree.umd.js"
+                });
+                chrome.tabs.executeScript(tab.id, {
+                    file:"scripts/RTcontent.js"
+                });
+                chrome.tabs.executeScript(tab.id, {
+                    file:"scripts/sequences.js"
                 });
                 }
                 
@@ -220,24 +224,28 @@ chrome.webRequest.onErrorOccurred.addListener(function(details) {
 var contextMenuItemFirst={
     "id":"first",
     "title":"First Version",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 
 var contextMenuItemRecent={
     "id":"recent",
     "title":"Recent Version",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 var contextMenuItemAll={
     "id":"all",
     "title":"All Versions",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 
 var contextMenuItemSave={
     "id":"save",
     "title":"Save Page Now",
-    "contexts":["all"]
+    "contexts":["all"],
+    "documentUrlPatterns":["*://*/*", "ftp://*/*"]
 };
 chrome.contextMenus.create(contextMenuItemFirst);
 chrome.contextMenus.create(contextMenuItemRecent);

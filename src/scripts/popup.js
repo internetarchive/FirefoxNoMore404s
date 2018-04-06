@@ -1,5 +1,4 @@
 global_url="";
-
 function remove_port(url){
     if(url.substr(-4)==':80/'){
         url=url.substring(0,url.length-4);
@@ -123,12 +122,12 @@ function search_tweet(eventObj){
 function display_list(key_word){
     $sbox = document.getElementById('suggestion-box');
     $sbox.style.display='none';
-    $sbox.innerHTML="";
+    $sbox.innerText="";
     var xhr = new XMLHttpRequest();
     xhr.open('GET', "https://web.archive.org/__wb/search/host?q="+key_word, true);
     xhr.onload=function(){
         $sbox.style.display='none';
-        $sbox.innerHTML="";
+        $sbox.innerText="";
         var data=JSON.parse(xhr.response);
         var n=data.hosts.length;
         if(n>0 && document.getElementById('search_input').value!=''){
@@ -136,12 +135,12 @@ function display_list(key_word){
             for(var i=0;i<n;i++){
                 var a=document.createElement('a');
                 a.onclick=function(event){
-                    document.getElementById('search_input').value=event.target.innerHTML;
+                    document.getElementById('search_input').value=event.target.innerText;
                     $sbox.style.display='none';
-                    $sbox.innerHTML="";
+                    $sbox.innerText="";
                 };
                 a.setAttribute('role','button');
-                a.innerHTML=data.hosts[i].display_name;
+                a.innerText=data.hosts[i].display_name;
                 var li=document.createElement('li');
                 li.appendChild(a);
                 $sbox.appendChild(li);
@@ -153,7 +152,7 @@ function display_list(key_word){
 
 function display_suggestions(e){
     document.getElementById('suggestion-box').style.display='none';
-    document.getElementById('suggestion-box').innerHTML="";
+    document.getElementById('suggestion-box').innerText="";
     //setTimeout is used to get the text in the text field after key has been pressed
     window.setTimeout(function(){
         var len=document.getElementById('search_input').value.length;
@@ -161,7 +160,7 @@ function display_suggestions(e){
             display_list(document.getElementById('search_input').value);
         }else{
             document.getElementById('suggestion-box').style.display='none';
-            document.getElementById('suggestion-box').innerHTML="";
+            document.getElementById('suggestion-box').innerText="";
         }
     },0.1);
 }
