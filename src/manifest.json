@@ -1,32 +1,63 @@
 {
   "manifest_version": 2,
-  "name": "No More 404s",
-  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
-  "version": "1.7.0",
+  "name": "Wayback Machine",
+  "applications": {
+    "gecko": {
+      "id": "wayback@web.archive.org",
+      "strict_min_version": "42.0"
+    }
+  },
+  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine.",
+  "version": "3.1.2",
   "homepage_url": "https://archive.org/",
   "icons": {
     "48": "images/icon.png",
     "96": "images/icon@2x.png"
   },
-  "applications": {
-    "gecko": {
-      "id": "wayback_machine@mozilla.org",
-      "strict_min_version": "48.0",
-      "update_url": "https://testpilot.firefox.com/files/nomore404s/nomore404s.json"
-    }
-  },
+
   "permissions": [
-    "webRequest",
-    "http://*/*",
-    "https://*/*",
-    "<all_urls>"
+      "notifications",
+      "tabs",
+      "activeTab",
+      "storage",
+      "system.display",
+      "webRequest",
+      "webRequestBlocking",
+      "contextMenus",
+      "http://*/*",
+      "https://*/*",
+      "*://*/*",
+      "<all_urls>"
   ],
   "background": {
-    "scripts": ["scripts/background.js"]
+    "scripts": ["scripts/utils.js",
+                "scripts/background.js"],
+    "persistent": true
   },
+  "content_scripts": [
+    {
+      "matches": ["http://*.wikipedia.org/*", "https://*.wikipedia.org/*"],
+      "js": ["scripts/build.js", "scripts/utils.js", "scripts/booklist.js", "scripts/wikipedia.js", "scripts/wikipedia_loader.js"],
+      "css": ["css/bootstrap.min.css", "css/wikipedia.css"]
+    }
+  ],
   "web_accessible_resources": [
     "images/insetIcon.svg",
     "images/close.svg",
-    "images/car.gif"
-  ]
+    "images/logo.gif",
+    "images/logo-animate.svg",
+    "images/icon.png",
+    "scripts/build.js",
+    "scripts/client.js",
+    "scripts/RTcontent.js",
+    "css/RTstyle.css",
+    "css/sequences.css",
+    "css/googlestyle.css",
+    "css/radial-tree.css",
+    "css/client.css"
+  ],
+  "browser_action": {
+    "default_icon": "images/icon.png",
+    "default_popup": "index.html"
+  }
 }

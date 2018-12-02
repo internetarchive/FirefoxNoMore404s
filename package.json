@@ -1,28 +1,45 @@
 {
-  "name": "FirefoxNoMore404s",
-  "description": "Reduce annoying 404 pages by automatically checking for an archived copy in the Wayback Machine. Learn more about this Test Pilot experiment at https://testpilot.firefox.com/",
-  "version": "1.7.0",
-  "author": "Internet Archive (https://archive.org/)",
-  "bugs": {
-    "url": "https://github.com/internetarchive/FirefoxNoMore404s/issues"
-  },
-  "devDependencies": {
-    "eslint": "^3.8.1",
-    "web-ext": "^1.6.0"
-  },
-  "homepage": "https://archive.org/",
-  "keywords": [],
-  "license": "AGPL-3",
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/internetarchive/FirefoxNoMore404s.git"
+  "name": "wayback-machine-chrome",
+  "version": "3.1.3",
+  "description": "A browser extension that interfaces with the internet archive",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
   },
   "scripts": {
+    "build": "webpack",
     "build_unsigned": "mkdir -p build_unsigned && web-ext build --source-dir=src --artifacts-dir=build_unsigned",
     "lint": "eslint .",
     "sign": "rm ./build/* || true && (export $(cat CREDENTIALS | xargs) && web-ext sign --verbose -s=src -a=build  --api-key=$JWT_ISSUER --api-secret=$JWT_SECRET) && git add *.xpi",
-    "test": "npm run lint",
     "dev": "web-ext run -s=src --pre-install"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/internetarchive/wayback-machine-chrome.git"
+  },
+  "author": "Internet Archive",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/internetarchive/wayback-machine-chrome/issues"
+  },
+  "homepage": "https://github.com/internetarchive/wayback-machine-chrome#readme",
+  "devDependencies": {
+    "bootstrap": "3.3.7",
+    "d3": "4.12.0",
+    "eslint": "^5.7.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "fast-levenshtein": "^2.0.6",
+    "jquery": "^3.3.1",
+    "jsdom": "^12.2.0",
+    "jssha": "^2.3.1",
+    "@internetarchive/radial-tree": "1.0.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "web-ext": "^1.6.0"
+  },
+  "dependencies": {}
 }
